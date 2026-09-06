@@ -871,61 +871,46 @@
             }
         }
 
-        // Render the exact dark pill dock with center '+' button
+        // Render the exact dark pill dock with center '+' button (icon-only, equal spacing)
         function renderBottomDock() {
             const dockContainer = document.getElementById('navDockContainer');
             if (!dockContainer) return;
 
-            const leftTabs = [
-                { id: 'today', label: 'Today', icon: 'home' },
-                { id: 'rhythm', label: 'Rhythm', icon: 'clock' }
+            const tabs = [
+                { id: 'today',    icon: 'home'     },
+                { id: 'rhythm',   icon: 'clock'    },
+                { id: '_plus',    icon: 'plus'     },   // center action
+                { id: 'calendar', icon: 'calendar' },
+                { id: 'profile',  icon: 'profile'  }
             ];
 
-            const rightTabs = [
-                { id: 'calendar', label: 'Calendar', icon: 'calendar' },
-                { id: 'profile', label: 'Profile', icon: 'profile' }
-            ];
-
-            function renderTabButton(tab) {
+            const items = tabs.map(tab => {
+                if (tab.id === '_plus') {
+                    return `
+                        <button onclick="openAddEventModal()" class="w-10 h-10 rounded-full bg-[#1C1C1E] hover:bg-[#2C2C2E] text-white flex items-center justify-center shadow-[0_6px_20px_rgba(0,0,0,0.38)] border-2 border-white/10 active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer group shrink-0" title="Add Task">
+                            <svg class="w-5 h-5 stroke-[2.8] transition-transform duration-200 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    `;
+                }
                 const isActive = currentScreen === tab.id;
                 if (isActive) {
-                    // Active style from screenshot: White pill with dark icon & label
                     return `
-                        <button onclick="switchScreen('${tab.id}')" class="bg-white text-[#111111] rounded-full px-3.5 py-1.5 flex items-center space-x-1.5 shadow-sm active:scale-95 transition-all cursor-pointer">
+                        <button onclick="switchScreen('${tab.id}')" class="bg-white text-[#111111] w-10 h-10 rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-all cursor-pointer shrink-0">
                             ${getDockSvg(tab.icon)}
-                            <span class="text-[12px] font-extrabold tracking-tight leading-none">${tab.label}</span>
                         </button>
                     `;
                 } else {
-                    // Inactive style from screenshot: Minimalist muted gray icon
                     return `
-                        <button onclick="switchScreen('${tab.id}')" class="text-[#8E8E93] hover:text-white p-2.5 rounded-full active:scale-90 transition-transform cursor-pointer flex items-center justify-center" title="${tab.label}">
+                        <button onclick="switchScreen('${tab.id}')" class="text-[#8E8E93] hover:text-white w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform cursor-pointer shrink-0">
                             ${getDockSvg(tab.icon)}
                         </button>
                     `;
                 }
-            }
+            }).join('');
 
-            dockContainer.innerHTML = `
-                <!-- Left Tabs: Home & Clock -->
-                <div class="flex items-center space-x-1">
-                    ${leftTabs.map(renderTabButton).join('')}
-                </div>
-
-                <!-- Center + Action Button (Add Daily Task) -->
-                <div class="flex items-center justify-center px-1">
-                    <button onclick="openAddEventModal()" class="w-[44px] h-[44px] rounded-full bg-[#1C1C1E] hover:bg-[#2C2C2E] text-white flex items-center justify-center shadow-[0_6px_20px_rgba(0,0,0,0.38)] border-2 border-white/10 -mt-3.5 active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer group shrink-0" title="Add Daily Task">
-                        <svg class="w-5 h-5 stroke-[2.8] transition-transform duration-200 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- Right Tabs: Calendar & Profile -->
-                <div class="flex items-center space-x-1">
-                    ${rightTabs.map(renderTabButton).join('')}
-                </div>
-            `;
+            dockContainer.innerHTML = items;
         }
         
         function switchScreen(screenName) {
