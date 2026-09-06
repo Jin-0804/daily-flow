@@ -320,14 +320,14 @@
                 <!-- Top Bar: Bolt Icon + Calendar Title & 86% Ready Badge + Avatar -->
                 <header class="flex items-center justify-between pt-1 px-1">
                     <div class="flex items-center space-x-2.5">
-                        <div class="w-8 h-8 rounded-xl bg-[#161617] text-white flex items-center justify-center shadow-sm">
+                        <div class="w-8 h-8 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shadow-[0_4px_12px_rgba(37,99,235,0.35)]">
                             <span class="material-symbols-outlined text-[19px]">bolt</span>
                         </div>
                         <span class="text-[17px] font-extrabold tracking-tight text-[#161616]">Calendar</span>
                     </div>
                     <div class="flex items-center space-x-2.5">
-                        <div class="bg-[#1C1C1E] text-white text-[11px] font-bold px-3 py-1 rounded-full flex items-center space-x-1.5 shadow-sm border border-white/10">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <div class="bg-[#E1F7EE] text-[#059669] text-[11px] font-bold px-3 py-1 rounded-full flex items-center space-x-1.5 shadow-sm border border-[#A7F3D0]/70">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#059669]"></span>
                             <span>86% Ready</span>
                         </div>
                         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-white shadow-sm cursor-pointer active:scale-95 transition" onclick="switchScreen('profile')"/>
@@ -350,8 +350,10 @@
                         <span class="material-symbols-outlined text-[18px]">chevron_left</span>
                     </button>
                     <div class="flex items-center space-x-2 cursor-pointer select-none" onclick="setCalView('day')">
-                        <span class="material-symbols-outlined text-[17px] text-neutral-800">calendar_month</span>
-                        <span id="calViewTitle" class="text-[13.5px] font-bold text-neutral-900 tracking-tight">Thursday, May 16</span>
+                        <div class="w-6 h-6 rounded-lg bg-blue-50 text-[#2563EB] flex items-center justify-center">
+                            <span class="material-symbols-outlined text-[15px]">calendar_today</span>
+                        </div>
+                        <span id="calViewTitle" class="text-[13.5px] font-bold text-neutral-900 tracking-tight">Sunday, May 17</span>
                     </div>
                     <button id="calNextBtn" class="w-7 h-7 rounded-full flex items-center justify-center text-neutral-500 hover:bg-neutral-100 hover:text-black active:scale-90 transition-all cursor-pointer">
                         <span class="material-symbols-outlined text-[18px]">chevron_right</span>
@@ -994,7 +996,7 @@
         // Global calendar events state
         let calYear = 2026;
         let calMonth = 4; // May (0-indexed)
-        let calDate = 16; // May 16
+        let calDate = 17; // May 17 (Sunday)
         let calView = 'month';
 
         const calEvents = [
@@ -1015,32 +1017,42 @@
             { date: '2026-05-15', title: 'Lunch Break', time: '12:00 PM', location: '📍 Cafeteria', type: 'free', icon: '🍽️', badgeText: 'Free Time', durationText: '45m' },
             { date: '2026-05-15', title: 'Study Session', time: '03:00 PM', location: '📍 Quiet Zone', type: 'focus', icon: '💻', badgeText: 'Deep Focus', durationText: '90m' },
             
-            // May 16 (Today - Schedule & Timeline matching user reference)
+            // May 16 (Today - Schedule & Timeline color-coded matching user reference)
             {
                 date: '2026-05-16',
                 time: '10:00 AM',
                 title: 'Mathematics Lecture',
-                location: '📍 Hall B4 · 🧠 High Mental Load',
+                locationHtml: '<span class="text-[#2563EB] font-medium">📍 Hall B4</span> · <span class="text-rose-500 font-medium">📍 High Mental Load</span>',
                 type: 'fixed',
                 icon: '🏫',
                 badgeText: 'Fixed Event',
-                badgeClass: 'bg-[#1C1C1E] text-white',
+                badgeClass: 'bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]/70',
                 badgeDot: '•',
+                cardClass: 'bg-white border border-blue-100/80 shadow-sm',
+                nodeClass: 'bg-[#2563EB] ring-4 ring-[#EFF6FF]',
                 durationText: '90m'
             },
             {
                 date: '2026-05-16',
                 time: '11:30 AM',
                 title: 'Recovery Time',
+                titleClass: 'text-[#064E3B]',
                 location: 'Quiet walk & outdoor mindfulness in quad garden',
+                locationClass: 'text-[#047857]',
                 type: 'recovery',
                 icon: '🌿',
                 badgeText: 'Recovery',
-                badgeClass: 'bg-neutral-100 text-neutral-900 border border-neutral-200',
+                badgeClass: 'bg-[#065F46] text-white font-bold',
                 badgeIcon: '🌿',
+                cardClass: 'bg-[#E8F8F0] border border-[#A7F3D0] shadow-sm',
+                nodeClass: 'bg-[#059669] ring-4 ring-[#E6F8F0]',
+                metaClass: 'text-[#059669] font-bold',
                 durationText: '+15% recharge',
                 isProgress: true,
                 progressPercent: 65,
+                progressBarClass: 'bg-[#059669]',
+                progressTrackClass: 'bg-white/80',
+                progressLabelClass: 'text-[#059669] font-bold',
                 progressLabel: 'Restoring'
             },
             {
@@ -1051,8 +1063,10 @@
                 type: 'free',
                 icon: '🍽️',
                 badgeText: 'Free Time',
-                badgeClass: 'bg-neutral-100 text-neutral-700 border border-neutral-200',
-                badgeIcon: '☕',
+                badgeClass: 'bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]/70',
+                badgeIcon: '💜',
+                cardClass: 'bg-white border border-slate-200/80 shadow-sm',
+                nodeClass: 'bg-[#CBD5E1] ring-4 ring-[#F1F5F9]',
                 durationText: '1h 30m'
             },
             {
@@ -1063,10 +1077,15 @@
                 type: 'focus',
                 icon: '📚',
                 badgeText: 'Smart Slotted',
-                badgeClass: 'bg-[#1C1C1E] text-white',
+                badgeClass: 'bg-[#F3E8FF] text-[#7E22CE] border border-[#DDD6FE]',
                 badgeIcon: '✦',
+                cardClass: 'bg-white border border-purple-200/80 shadow-sm',
+                nodeClass: 'bg-[#8B5CF6] ring-4 ring-[#F5F3FF]',
+                metaClass: 'text-[#7E22CE] font-bold',
                 durationText: '98% Circadian Match',
-                sprint: 'Focus Sprint: Proofs & Graphs'
+                sprint: 'Focus Sprint: Proofs & Graphs',
+                sprintClass: 'bg-[#FAF5FF] border border-[#E9D5FF] text-[#6B21A8]',
+                sprintDotClass: 'bg-[#7E22CE]'
             },
             {
                 date: '2026-05-16',
@@ -1076,7 +1095,9 @@
                 type: 'break',
                 icon: '☕',
                 badgeText: 'Free Time',
-                badgeClass: 'bg-neutral-100 text-neutral-700 border border-neutral-200',
+                badgeClass: 'bg-[#F1F5F9] text-[#475569] border border-slate-200',
+                cardClass: 'bg-white border border-slate-200/80 shadow-sm',
+                nodeClass: 'bg-[#CBD5E1] ring-4 ring-[#F1F5F9]',
                 durationText: '30m',
                 rightEmoji: '🍎'
             },
@@ -1084,12 +1105,14 @@
                 date: '2026-05-16',
                 time: '05:00 PM',
                 title: 'Badminton Practice',
-                location: 'Sports Center Court 2 · High Physical, Low Mental',
+                locationHtml: '<span class="text-neutral-700">⤢ Sports Center Court 2</span> · <span class="text-emerald-600 font-medium">High Physical, Low Mental</span>',
                 type: 'sport',
                 icon: '🏸',
                 badgeText: 'Fixed Event',
-                badgeClass: 'bg-[#1C1C1E] text-white',
+                badgeClass: 'bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]/70',
                 badgeDot: '•',
+                cardClass: 'bg-white border border-blue-100/80 shadow-sm',
+                nodeClass: 'bg-[#2563EB] ring-4 ring-[#EFF6FF]',
                 durationText: '75m'
             },
             {
@@ -1100,21 +1123,136 @@
                 type: 'errand',
                 icon: '🛒',
                 badgeText: 'Temporary Task / Errands',
-                badgeClass: 'bg-neutral-100 text-neutral-700 border border-neutral-200',
+                badgeClass: 'bg-[#F3E8FF] text-[#7E22CE] border border-[#DDD6FE]',
+                cardClass: 'bg-white border border-purple-100/80 shadow-sm',
+                nodeClass: 'bg-[#8B5CF6] ring-4 ring-[#F5F3FF]',
                 durationText: '60m'
             },
             
-            // May 17
-            { date: '2026-05-17', title: 'Yoga Class', time: '09:00 AM', location: '📍 Fitness Center', type: 'sport', icon: '🧘', badgeText: 'Workout', durationText: '60m' },
-            { date: '2026-05-17', title: 'Brunch', time: '10:30 AM', location: '📍 Campus Cafe', type: 'free', icon: '🍽️', badgeText: 'Free Time', durationText: '60m' },
-            { date: '2026-05-17', title: 'Study Group', time: '01:00 PM', location: '📍 Room 202', type: 'group', icon: '👥', badgeText: 'Group Study', durationText: '90m' },
-            { date: '2026-05-17', title: 'Physics Review', time: '03:00 PM', location: '📍 Library', type: 'focus', icon: '💻', badgeText: 'Deep Focus', durationText: '90m' },
+            // May 17 (Sunday - Schedule & Timeline matching reference image)
+            {
+                date: '2026-05-17',
+                time: '10:00 AM',
+                title: 'Mathematics Lecture',
+                locationHtml: '<span class="text-[#2563EB] font-medium">📍 Hall B4</span> · <span class="text-rose-500 font-medium">📍 High Mental Load</span>',
+                type: 'fixed',
+                icon: '🏫',
+                badgeText: 'Fixed Event',
+                badgeClass: 'bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]/70',
+                badgeDot: '•',
+                cardClass: 'bg-white border border-blue-100/80 shadow-sm',
+                nodeClass: 'bg-[#2563EB] ring-4 ring-[#EFF6FF]',
+                durationText: '90m'
+            },
+            {
+                date: '2026-05-17',
+                time: '11:30 AM',
+                title: 'Recovery Time',
+                titleClass: 'text-[#064E3B]',
+                location: 'Quiet walk & outdoor mindfulness in quad garden',
+                locationClass: 'text-[#047857]',
+                type: 'recovery',
+                icon: '🌿',
+                badgeText: 'Recovery',
+                badgeClass: 'bg-[#065F46] text-white font-bold',
+                badgeIcon: '🌿',
+                cardClass: 'bg-[#E8F8F0] border border-[#A7F3D0] shadow-sm',
+                nodeClass: 'bg-[#059669] ring-4 ring-[#E6F8F0]',
+                metaClass: 'text-[#059669] font-bold',
+                durationText: '+15% recharge',
+                isProgress: true,
+                progressPercent: 65,
+                progressBarClass: 'bg-[#059669]',
+                progressTrackClass: 'bg-white/80',
+                progressLabelClass: 'text-[#059669] font-bold',
+                progressLabel: 'Restoring'
+            },
+            {
+                date: '2026-05-17',
+                time: '12:00 PM',
+                title: 'Lunch & Social Break',
+                location: '🍴 Student Union Atrium with Study Pod',
+                type: 'free',
+                icon: '🍽️',
+                badgeText: 'Free Time',
+                badgeClass: 'bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]/70',
+                badgeIcon: '💜',
+                cardClass: 'bg-white border border-slate-200/80 shadow-sm',
+                nodeClass: 'bg-[#CBD5E1] ring-4 ring-[#F1F5F9]',
+                durationText: '1h 30m'
+            },
+            {
+                date: '2026-05-17',
+                time: '02:00 PM',
+                title: 'Assignment: Discrete Math',
+                location: 'Library Quiet Wing · Floor 3',
+                type: 'focus',
+                icon: '📚',
+                badgeText: 'Smart Slotted',
+                badgeClass: 'bg-[#F3E8FF] text-[#7E22CE] border border-[#DDD6FE]',
+                badgeIcon: '✦',
+                cardClass: 'bg-white border border-purple-200/80 shadow-sm',
+                nodeClass: 'bg-[#8B5CF6] ring-4 ring-[#F5F3FF]',
+                metaClass: 'text-[#7E22CE] font-bold',
+                durationText: '98% Circadian Match',
+                sprint: 'Focus Sprint: Proofs & Graphs',
+                sprintClass: 'bg-[#FAF5FF] border border-[#E9D5FF] text-[#6B21A8]',
+                sprintDotClass: 'bg-[#7E22CE]'
+            },
+            {
+                date: '2026-05-17',
+                time: '03:30 PM',
+                title: 'Short Break / Snack',
+                location: 'Hydration & brain recharge',
+                type: 'break',
+                icon: '☕',
+                badgeText: 'Free Time',
+                badgeClass: 'bg-[#F1F5F9] text-[#475569] border border-slate-200',
+                cardClass: 'bg-white border border-slate-200/80 shadow-sm',
+                nodeClass: 'bg-[#CBD5E1] ring-4 ring-[#F1F5F9]',
+                durationText: '30m',
+                rightEmoji: '🍎'
+            },
+            {
+                date: '2026-05-17',
+                time: '05:00 PM',
+                title: 'Badminton Practice',
+                locationHtml: '<span class="text-neutral-700">⤢ Sports Center Court 2</span> · <span class="text-emerald-600 font-medium">High Physical, Low Mental</span>',
+                type: 'sport',
+                icon: '🏸',
+                badgeText: 'Fixed Event',
+                badgeClass: 'bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]/70',
+                badgeDot: '•',
+                cardClass: 'bg-white border border-blue-100/80 shadow-sm',
+                nodeClass: 'bg-[#2563EB] ring-4 ring-[#EFF6FF]',
+                durationText: '75m'
+            },
+            {
+                date: '2026-05-17',
+                time: '07:30 PM',
+                title: 'Grocery & Dorm Supplies',
+                location: "Trader Joe's • Greek yogurt, oats, fruit, notebook refill",
+                type: 'errand',
+                icon: '🛒',
+                badgeText: 'Temporary Task / Errands',
+                badgeClass: 'bg-[#F3E8FF] text-[#7E22CE] border border-[#DDD6FE]',
+                cardClass: 'bg-white border border-purple-100/80 shadow-sm',
+                nodeClass: 'bg-[#8B5CF6] ring-4 ring-[#F5F3FF]',
+                durationText: '60m'
+            },
             
             // May 18
             { date: '2026-05-18', title: 'Physics Lab', time: '09:00 AM', location: '📍 Lab 4', type: 'lab', icon: '🔬', badgeText: 'Lab Session', durationText: '120m' },
             { date: '2026-05-18', title: 'Office Hours', time: '11:00 AM', location: '📍 Dr. Smith Office', type: 'meeting', icon: '📋', badgeText: 'Office Hours', durationText: '45m' },
             { date: '2026-05-18', title: 'Research Meeting', time: '02:00 PM', location: '📍 Conference Room', type: 'meeting', icon: '📋', badgeText: 'Meeting', durationText: '60m' }
         ];
+
+        function formatDateStr(year, month, date) {
+            const y = year;
+            const m = String(month + 1).padStart(2, '0');
+            const d = String(date).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
 
         function getCalEventsForDate(dateStr) {
             return calEvents.filter(e => e.date === dateStr);
@@ -1191,12 +1329,12 @@
             for (let i = 0; i < 7; i++) {
                 weekDays.push(new Date(year, month, startDate + i));
             }
-            const todayStr = '2026-05-16';
+            const todayStr = '2026-05-17';
             
             // Header
             let headerHtml = '';
             weekDays.forEach(d => {
-                const ds = d.toISOString().slice(0, 10);
+                const ds = formatDateStr(d.getFullYear(), d.getMonth(), d.getDate());
                 const isToday = ds === todayStr;
                 const dayNum = d.getDate();
                 const dayName = d.toLocaleString('default', { weekday: 'short' });
@@ -1223,7 +1361,7 @@
                 
                 for (let d = 0; d < 7; d++) {
                     const dateObj = weekDays[d];
-                    const ds = dateObj.toISOString().slice(0, 10);
+                    const ds = formatDateStr(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
                     const evs = getCalEventsForDate(ds);
                     
                     const matched = evs.find(e => {
@@ -1240,12 +1378,12 @@
                     let cellHtml = `<div class="h-full rounded">`;
                     if (matched) {
                         const colors = {
-                            fixed: 'bg-[#1C1C1E] text-white border-neutral-800',
-                            recovery: 'bg-emerald-50 border-emerald-200 text-emerald-900',
-                            free: 'bg-white border-neutral-200 text-neutral-900',
+                            fixed: 'bg-[#2563EB] text-white border-blue-600',
+                            recovery: 'bg-[#E8F8F0] border-[#A7F3D0] text-[#065F46]',
+                            free: 'bg-indigo-50 border-indigo-100 text-[#4F46E5]',
                             focus: 'bg-purple-600 text-white border-purple-700',
-                            break: 'bg-amber-50 border-amber-200 text-amber-900',
-                            sport: 'bg-orange-50 border-orange-200 text-orange-900',
+                            break: 'bg-slate-100 border-slate-200 text-slate-700',
+                            sport: 'bg-blue-100 border-blue-200 text-blue-800',
                             group: 'bg-indigo-50 border-indigo-200 text-indigo-900',
                             talk: 'bg-rose-50 border-rose-200 text-rose-900',
                             meeting: 'bg-[#f0f4f9] border-neutral-200 text-neutral-900',
@@ -1263,8 +1401,8 @@
             calWeekGrid.innerHTML = gridHtml;
 
             // Active Day Header
-            const activeDay = weekDays.find(d => d.toISOString().slice(0, 10) === todayStr) || weekDays[4];
-            const activeDs = activeDay.toISOString().slice(0, 10);
+            const activeDay = weekDays.find(d => formatDateStr(d.getFullYear(), d.getMonth(), d.getDate()) === todayStr) || weekDays[4];
+            const activeDs = formatDateStr(activeDay.getFullYear(), activeDay.getMonth(), activeDay.getDate());
             calWeekActiveDay.textContent = activeDay.toLocaleString('default', { weekday: 'long', month: 'long', day: 'numeric' });
             const evCount = getCalEventsForDate(activeDs).length;
             calWeekEventCount.textContent = evCount + ' events';
@@ -1274,11 +1412,11 @@
             calViewTitle.textContent = `${startStr} – ${endStr}`;
         }
 
-        // Render Day View (Schedule & Timeline with sleek vertical line, nodes, and black simple cards)
+        // Render Day View (Schedule & Timeline with sleek vertical line, nodes, and colored cards)
         function renderCalDay(year, month, date) {
             if (!calDayTimeline) return;
             const dt = new Date(year, month, date);
-            const ds = dt.toISOString().slice(0, 10);
+            const ds = formatDateStr(year, month, date);
             const dayName = dt.toLocaleString('default', { weekday: 'long', month: 'short', day: 'numeric' });
             const evs = getCalEventsForDate(ds);
             
@@ -1332,23 +1470,37 @@
                     const badgeText = e.badgeText || (e.type === 'fixed' ? 'Fixed Event' : (e.type === 'recovery' ? 'Recovery' : (e.type === 'focus' ? 'Smart Slotted' : 'Free Time')));
                     const durationText = e.durationText || e.meta || '60m';
 
-                    // Black simple styling for badges & nodes
+                    // Activity color-coding matching reference image
                     let badgeClass = e.badgeClass;
-                    let nodeClass = 'bg-[#1C1C1E] ring-4 ring-[#EDEDED]';
+                    let nodeClass = e.nodeClass;
+                    let cardClass = e.cardClass;
+                    let metaClass = e.metaClass || 'text-neutral-500 font-semibold';
+                    let titleClass = e.titleClass || 'text-[#161617]';
 
-                    if (!badgeClass) {
-                        if (e.type === 'fixed' || e.type === 'sport') {
-                            badgeClass = 'bg-[#1C1C1E] text-white';
-                            nodeClass = 'bg-[#1C1C1E] ring-4 ring-[#EDEDED]';
+                    if (!nodeClass) {
+                        if (e.type === 'fixed') {
+                            nodeClass = 'bg-[#2563EB] ring-4 ring-[#EFF6FF]';
+                            badgeClass = badgeClass || 'bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]/70';
+                            cardClass = cardClass || 'bg-white border border-blue-100/80 shadow-sm';
                         } else if (e.type === 'recovery') {
-                            badgeClass = 'bg-neutral-100 text-neutral-900 border border-neutral-200/90';
-                            nodeClass = 'bg-neutral-800 ring-4 ring-[#EDEDED]';
+                            nodeClass = 'bg-[#059669] ring-4 ring-[#E6F8F0]';
+                            badgeClass = badgeClass || 'bg-[#065F46] text-white font-bold';
+                            cardClass = cardClass || 'bg-[#E8F8F0] border border-[#A7F3D0] shadow-sm';
+                            metaClass = 'text-[#059669] font-bold';
+                            titleClass = 'text-[#064E3B]';
                         } else if (e.type === 'focus' || e.type === 'smart') {
-                            badgeClass = 'bg-[#1C1C1E] text-white';
-                            nodeClass = 'bg-[#1C1C1E] ring-4 ring-[#EDEDED]';
+                            nodeClass = 'bg-[#8B5CF6] ring-4 ring-[#F5F3FF]';
+                            badgeClass = badgeClass || 'bg-[#F3E8FF] text-[#7E22CE] border border-[#DDD6FE]';
+                            cardClass = cardClass || 'bg-white border border-purple-200/80 shadow-sm';
+                            metaClass = 'text-[#7E22CE] font-bold';
+                        } else if (e.type === 'sport') {
+                            nodeClass = 'bg-[#2563EB] ring-4 ring-[#EFF6FF]';
+                            badgeClass = badgeClass || 'bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]/70';
+                            cardClass = cardClass || 'bg-white border border-blue-100/80 shadow-sm';
                         } else {
-                            badgeClass = 'bg-neutral-100 text-neutral-700 border border-neutral-200/90';
-                            nodeClass = 'bg-neutral-400 ring-4 ring-[#EDEDED]';
+                            nodeClass = 'bg-[#CBD5E1] ring-4 ring-[#F1F5F9]';
+                            badgeClass = badgeClass || 'bg-[#F1F5F9] text-[#475569] border border-slate-200';
+                            cardClass = cardClass || 'bg-white border border-slate-200/80 shadow-sm';
                         }
                     }
 
@@ -1362,12 +1514,12 @@
 
                             <!-- Center Timeline Line & Node -->
                             <div class="relative flex flex-col items-center self-stretch shrink-0">
-                                ${!isLast ? '<div class="w-[2px] bg-neutral-200/90 absolute top-4 -bottom-4 left-1/2 -translate-x-1/2"></div>' : ''}
+                                ${!isLast ? '<div class="w-[2px] bg-[#E2E8F0] absolute top-4 -bottom-4 left-1/2 -translate-x-1/2"></div>' : ''}
                                 <div class="w-3.5 h-3.5 rounded-full ${nodeClass} z-10 shrink-0 mt-1"></div>
                             </div>
 
-                            <!-- Right Event Card (Black & Clean Minimalist Style) -->
-                            <div class="flex-1 bg-white rounded-[22px] p-3.5 border border-neutral-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-md transition-all space-y-2">
+                            <!-- Right Event Card (Color Coded Matching Reference) -->
+                            <div class="flex-1 ${cardClass} rounded-[22px] p-3.5 hover:shadow-md transition-all space-y-2">
                                 <!-- Card Header: Badge & Duration/Status -->
                                 <div class="flex items-center justify-between">
                                     <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full inline-flex items-center space-x-1 ${badgeClass}">
@@ -1375,12 +1527,12 @@
                                         ${e.badgeIcon ? `<span class="mr-0.5">${e.badgeIcon}</span>` : ''}
                                         <span>${badgeText}</span>
                                     </span>
-                                    <span class="text-[11px] font-bold text-neutral-500">${durationText}</span>
+                                    <span class="text-[11px] ${metaClass}">${durationText}</span>
                                 </div>
 
                                 <!-- Card Title -->
                                 <div class="flex items-center justify-between">
-                                    <h4 class="text-[14px] font-extrabold text-[#161617] tracking-tight flex items-center space-x-1.5">
+                                    <h4 class="text-[14px] font-extrabold ${titleClass} tracking-tight flex items-center space-x-1.5">
                                         <span>${icon}</span>
                                         <span>${e.title}</span>
                                     </h4>
@@ -1388,26 +1540,26 @@
                                 </div>
 
                                 <!-- Card Location / Details -->
-                                ${e.location ? `<p class="text-[11px] font-medium text-neutral-500 leading-snug">${e.location}</p>` : ''}
+                                ${e.locationHtml ? `<p class="text-[11px] font-medium leading-snug">${e.locationHtml}</p>` : (e.location ? `<p class="text-[11px] font-medium ${e.locationClass || 'text-neutral-500'} leading-snug">${e.location}</p>` : '')}
 
                                 <!-- Recovery Progress Bar -->
                                 ${e.isProgress ? `
                                     <div class="pt-1 flex items-center justify-between gap-2.5">
-                                        <div class="flex-1 bg-neutral-100 h-1.5 rounded-full overflow-hidden">
-                                            <div class="bg-[#1C1C1E] h-full rounded-full" style="width: ${e.progressPercent || 65}%"></div>
+                                        <div class="flex-1 ${e.progressTrackClass || 'bg-white/80'} h-1.5 rounded-full overflow-hidden">
+                                            <div class="${e.progressBarClass || 'bg-[#059669]'} h-full rounded-full" style="width: ${e.progressPercent || 65}%"></div>
                                         </div>
-                                        <span class="text-[10px] font-bold text-neutral-700 tracking-tight shrink-0">${e.progressLabel || 'Restoring'}</span>
+                                        <span class="text-[10px] ${e.progressLabelClass || 'text-[#059669] font-bold'} tracking-tight shrink-0">${e.progressLabel || 'Restoring'}</span>
                                     </div>
                                 ` : ''}
 
                                 <!-- Smart Slotted Focus Sprint Capsule -->
                                 ${e.sprint ? `
-                                    <div class="mt-1 flex items-center justify-between bg-neutral-100/90 rounded-full px-2.5 py-1 text-[10.5px] font-semibold text-neutral-800">
+                                    <div class="mt-1 flex items-center justify-between ${e.sprintClass || 'bg-[#FAF5FF] border border-[#E9D5FF] text-[#6B21A8]'} rounded-full px-2.5 py-1 text-[10.5px] font-semibold">
                                         <div class="flex items-center space-x-1.5">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-[#1C1C1E]"></span>
+                                            <span class="w-1.5 h-1.5 rounded-full ${e.sprintDotClass || 'bg-[#7E22CE]'}"></span>
                                             <span>${e.sprint}</span>
                                         </div>
-                                        <span class="material-symbols-outlined text-[14px] text-neutral-400">more_horiz</span>
+                                        <span class="material-symbols-outlined text-[14px] text-purple-400">more_horiz</span>
                                     </div>
                                 ` : ''}
                             </div>
@@ -1548,28 +1700,72 @@
             const location = eventLocationInput.value.trim() || 'Library Quiet Zone';
             const type = selectedEventTypeInput.value || 'focus';
 
-            // Add to calendar events
-            const iconMap = {
-                focus: '💻',
-                fixed: '📚',
-                recovery: '🧘',
-                sport: '🏸'
+            // Add to calendar events with rich color themes matching reference
+            const colorMapping = {
+                focus: {
+                    badgeText: 'Smart Slotted',
+                    badgeClass: 'bg-[#F3E8FF] text-[#7E22CE] border border-[#DDD6FE]',
+                    badgeIcon: '✦',
+                    cardClass: 'bg-white border border-purple-200/80 shadow-sm',
+                    nodeClass: 'bg-[#8B5CF6] ring-4 ring-[#F5F3FF]',
+                    metaClass: 'text-[#7E22CE] font-bold',
+                    icon: '💻'
+                },
+                fixed: {
+                    badgeText: 'Fixed Event',
+                    badgeClass: 'bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]/70',
+                    badgeDot: '•',
+                    cardClass: 'bg-white border border-blue-100/80 shadow-sm',
+                    nodeClass: 'bg-[#2563EB] ring-4 ring-[#EFF6FF]',
+                    icon: '📚'
+                },
+                recovery: {
+                    badgeText: 'Recovery',
+                    badgeClass: 'bg-[#065F46] text-white font-bold',
+                    badgeIcon: '🌿',
+                    cardClass: 'bg-[#E8F8F0] border border-[#A7F3D0] shadow-sm',
+                    nodeClass: 'bg-[#059669] ring-4 ring-[#E6F8F0]',
+                    metaClass: 'text-[#059669] font-bold',
+                    titleClass: 'text-[#064E3B]',
+                    isProgress: true,
+                    progressPercent: 70,
+                    progressBarClass: 'bg-[#059669]',
+                    progressTrackClass: 'bg-white/80',
+                    progressLabelClass: 'text-[#059669] font-bold',
+                    progressLabel: 'Restoring',
+                    icon: '🧘'
+                },
+                sport: {
+                    badgeText: 'Fixed Event',
+                    badgeClass: 'bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]/70',
+                    badgeDot: '•',
+                    cardClass: 'bg-white border border-blue-100/80 shadow-sm',
+                    nodeClass: 'bg-[#2563EB] ring-4 ring-[#EFF6FF]',
+                    icon: '🏸'
+                }
             };
-            const badgeMap = {
-                focus: 'Deep Focus',
-                fixed: 'Fixed Event',
-                recovery: 'Recovery',
-                sport: 'Workout'
-            };
+            const config = colorMapping[type] || colorMapping.focus;
             const newEvent = {
                 date,
                 title,
                 time,
                 location: location ? (location.startsWith('📍') ? location : `📍 ${location}`) : '📍 Campus',
                 type,
-                icon: iconMap[type] || '📌',
-                badgeText: badgeMap[type] || 'Daily Task',
-                badgeClass: (type === 'focus' || type === 'fixed' || type === 'sport') ? 'bg-[#1C1C1E] text-white' : 'bg-neutral-100 text-neutral-900 border border-neutral-200/90',
+                icon: config.icon || '📌',
+                badgeText: config.badgeText,
+                badgeClass: config.badgeClass,
+                badgeDot: config.badgeDot,
+                badgeIcon: config.badgeIcon,
+                cardClass: config.cardClass,
+                nodeClass: config.nodeClass,
+                metaClass: config.metaClass,
+                titleClass: config.titleClass,
+                isProgress: config.isProgress,
+                progressPercent: config.progressPercent,
+                progressBarClass: config.progressBarClass,
+                progressTrackClass: config.progressTrackClass,
+                progressLabelClass: config.progressLabelClass,
+                progressLabel: config.progressLabel,
                 durationText: '60m'
             };
             calEvents.push(newEvent);
