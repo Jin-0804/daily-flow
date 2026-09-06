@@ -102,16 +102,15 @@
             transition: opacity 0.25s ease, transform 0.25s ease;
         }
         .view-hidden {
-            opacity: 0;
-            transform: scale(0.96);
-            pointer-events: none;
-            z-index: 1;
+            display: none !important;
         }
         .view-visible {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-            z-index: 2;
+            display: block !important;
+            animation: fadeIn 0.2s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Task completion animation */
@@ -318,43 +317,86 @@
             <div id="screen-calendar" class="screen-transition screen-hidden h-full overflow-y-auto no-scrollbar px-4 pt-2 pb-28 flex flex-col space-y-4" data-purpose="screen-calendar">
                 
                 <!-- Header -->
+                <!-- Top Bar: Bolt Icon + Calendar Title & 86% Ready Badge + Avatar -->
                 <header class="flex items-center justify-between pt-1 px-1">
-                    <h1 class="text-[32px] font-extrabold tracking-tight text-[#161616] leading-none">Calendar</h1>
-                    <div class="flex items-center space-x-2">
-                        <button class="w-10 h-10 rounded-full bg-white/70 active:scale-95 transition-transform flex items-center justify-center text-[#1C1C1E] shadow-sm hover:bg-white">
-                            <span class="material-symbols-outlined text-[20px]">search</span>
-                        </button>
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-[#161617] text-white flex items-center justify-center shadow-sm">
+                            <span class="material-symbols-outlined text-[19px]">bolt</span>
+                        </div>
+                        <span class="text-[17px] font-extrabold tracking-tight text-[#161616]">Calendar</span>
+                    </div>
+                    <div class="flex items-center space-x-2.5">
+                        <div class="bg-[#1C1C1E] text-white text-[11px] font-bold px-3 py-1 rounded-full flex items-center space-x-1.5 shadow-sm border border-white/10">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span>86% Ready</span>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-white shadow-sm cursor-pointer active:scale-95 transition" onclick="switchScreen('profile')"/>
                     </div>
                 </header>
+
+                <!-- Section Header: Schedule & Timeline + View Segmented Pills -->
+                <div class="flex items-center justify-between px-1 pt-0.5">
+                    <h2 class="text-[20px] font-extrabold text-[#161617] tracking-tight">Schedule & Timeline</h2>
+                    <div class="bg-neutral-200/70 p-0.5 rounded-full flex items-center text-[11px] font-semibold text-neutral-500">
+                        <button data-view="day" class="cal-view-btn px-3 py-1 rounded-full text-neutral-500 cursor-pointer transition-all">Day</button>
+                        <button data-view="week" class="cal-view-btn px-2.5 py-1 rounded-full text-neutral-500 cursor-pointer transition-all">Week</button>
+                        <button data-view="month" class="cal-view-btn px-2.5 py-1 rounded-full text-neutral-500 cursor-pointer transition-all">Month</button>
+                    </div>
+                </div>
                 
-                <!-- Navigation: Month | Week | Day Toggle -->
-                <div class="bg-white rounded-[22px] p-2.5 px-3.5 shadow-[0_4px_16px_rgba(0,0,0,0.03)] border border-neutral-100 flex items-center justify-between shrink-0">
-                    <button id="calPrevBtn" class="w-8 h-8 rounded-xl flex items-center justify-center text-neutral-500 hover:bg-neutral-100 active:scale-90 transition-all">
+                <!-- Date Navigation Capsule: < 📅 Thursday, Oct 24 / May 16 > -->
+                <div class="bg-white rounded-full py-2 px-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-neutral-200/80 flex items-center justify-between shrink-0">
+                    <button id="calPrevBtn" class="w-7 h-7 rounded-full flex items-center justify-center text-neutral-500 hover:bg-neutral-100 hover:text-black active:scale-90 transition-all cursor-pointer">
                         <span class="material-symbols-outlined text-[18px]">chevron_left</span>
                     </button>
-                    <div class="flex items-center gap-3">
-                        <span id="calViewTitle" class="text-[14px] font-bold text-neutral-900 tracking-tight">May 2026</span>
-                        <div class="bg-[#f0f2f5] p-0.5 rounded-full flex items-center text-[11px] font-semibold text-neutral-500">
-                            <button data-view="month" class="cal-view-btn px-2.5 py-1 rounded-full text-neutral-500 cursor-pointer transition-all">Month</button>
-                            <button data-view="week" class="cal-view-btn px-2.5 py-1 rounded-full text-neutral-500 cursor-pointer transition-all">Week</button>
-                            <button data-view="day" class="cal-view-btn px-2.5 py-1 rounded-full text-neutral-500 cursor-pointer transition-all">Day</button>
-                        </div>
+                    <div class="flex items-center space-x-2 cursor-pointer select-none" onclick="setCalView('day')">
+                        <span class="material-symbols-outlined text-[17px] text-neutral-800">calendar_month</span>
+                        <span id="calViewTitle" class="text-[13.5px] font-bold text-neutral-900 tracking-tight">Thursday, May 16</span>
                     </div>
-                    <button id="calNextBtn" class="w-8 h-8 rounded-xl flex items-center justify-center text-neutral-500 hover:bg-neutral-100 active:scale-90 transition-all">
+                    <button id="calNextBtn" class="w-7 h-7 rounded-full flex items-center justify-center text-neutral-500 hover:bg-neutral-100 hover:text-black active:scale-90 transition-all cursor-pointer">
                         <span class="material-symbols-outlined text-[18px]">chevron_right</span>
                     </button>
                 </div>
 
                 <!-- Calendar Views Container -->
-                <div class="relative min-h-[420px]">
+                <div class="relative w-full">
                     
+                    <!-- DAY VIEW (Primary Schedule & Timeline) -->
+                    <div id="calDayView" class="view-transition view-visible w-full">
+                        <div id="calDayTimeline" class="relative pl-0.5 pr-0.5 space-y-3.5 pb-2">
+                            <!-- Populated dynamically via renderCalDay -->
+                        </div>
+                    </div>
+
+                    <!-- WEEK VIEW -->
+                    <div id="calWeekView" class="view-transition view-hidden w-full">
+                        <section class="bg-white rounded-[26px] border border-neutral-100/90 shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col">
+                            <div class="overflow-x-auto no-scrollbar border-b border-neutral-100 bg-[#f8f9fa]">
+                                <div id="calWeekHeader" class="flex items-center min-w-[340px] pl-10 pr-2 py-2"></div>
+                            </div>
+                            <div class="overflow-y-auto overflow-x-auto no-scrollbar max-h-[340px] bg-white">
+                                <div id="calWeekGrid" class="min-w-[340px] relative pb-2"></div>
+                            </div>
+                            <div class="border-t border-neutral-100 bg-[#f8f9fa] p-2.5 px-3 flex items-center justify-between shrink-0">
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-2 h-2 rounded-full bg-[#161719]"></span>
+                                    <span id="calWeekActiveDay" class="text-[11px] font-bold text-neutral-800">Thursday, May 16</span>
+                                    <span id="calWeekEventCount" class="text-[10px] font-semibold text-neutral-500 bg-neutral-200/70 px-1.5 py-0.5 rounded-full">7 events</span>
+                                </div>
+                                <button onclick="openAddEventModal()" class="flex items-center space-x-1 text-[11px] font-bold text-neutral-800 hover:text-black bg-white px-2.5 py-1 rounded-full shadow-sm border border-neutral-200/80 active:scale-95 transition">
+                                    <span>+ New</span>
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+
                     <!-- MONTH VIEW -->
-                    <div id="calMonthView" class="view-transition view-visible w-full">
+                    <div id="calMonthView" class="view-transition view-hidden w-full">
                         <section class="bg-[#F8F9FA] rounded-[32px] shadow-soft border border-white/60 p-4">
                             <div class="flex justify-between items-center mb-4">
                                 <span id="calMonthLabel" class="text-[16px] font-semibold text-neutral-900 tracking-tight">May 2026</span>
-                                <button class="flex items-center space-x-1 text-[13px] font-medium text-neutral-800 bg-transparent py-1 px-1 rounded-md">
-                                    <span>This Month</span>
+                                <button onclick="setCalView('day')" class="flex items-center space-x-1 text-[13px] font-medium text-neutral-800 bg-transparent py-1 px-1 rounded-md hover:underline">
+                                    <span>Today</span>
                                     <svg class="w-3.5 h-3.5 stroke-[2.2] stroke-current text-neutral-500" fill="none" viewBox="0 0 24 24">
                                         <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
@@ -370,39 +412,6 @@
                                 <span class="text-[12px] font-semibold text-neutral-600">S</span>
                             </div>
                             <div id="calMonthGrid" class="grid grid-cols-7 gap-y-3.5 text-center items-center justify-items-center text-[14px] font-medium text-neutral-800"></div>
-                        </section>
-                    </div>
-
-                    <!-- WEEK VIEW -->
-                    <div id="calWeekView" class="view-transition view-hidden w-full" style="position: absolute; top: 0; left: 0; right: 0;">
-                        <section class="bg-white rounded-[26px] border border-neutral-100/90 shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col">
-                            <div class="overflow-x-auto no-scrollbar border-b border-neutral-100 bg-[#f8f9fa]">
-                                <div id="calWeekHeader" class="flex items-center min-w-[340px] pl-10 pr-2 py-2"></div>
-                            </div>
-                            <div class="overflow-y-auto overflow-x-auto no-scrollbar max-h-[340px] bg-white">
-                                <div id="calWeekGrid" class="min-w-[340px] relative pb-2"></div>
-                            </div>
-                            <div class="border-t border-neutral-100 bg-[#f8f9fa] p-2.5 px-3 flex items-center justify-between shrink-0">
-                                <div class="flex items-center space-x-2">
-                                    <span class="w-2 h-2 rounded-full bg-[#161719]"></span>
-                                    <span id="calWeekActiveDay" class="text-[11px] font-bold text-neutral-800">Friday, May 16</span>
-                                    <span id="calWeekEventCount" class="text-[10px] font-semibold text-neutral-500 bg-neutral-200/70 px-1.5 py-0.5 rounded-full">4 events</span>
-                                </div>
-                                <button onclick="openAddEventModal()" class="flex items-center space-x-1 text-[11px] font-bold text-neutral-800 hover:text-black bg-white px-2.5 py-1 rounded-full shadow-sm border border-neutral-200/80 active:scale-95 transition">
-                                    <span>+ New</span>
-                                </button>
-                            </div>
-                        </section>
-                    </div>
-
-                    <!-- DAY VIEW -->
-                    <div id="calDayView" class="view-transition view-hidden w-full" style="position: absolute; top: 0; left: 0; right: 0;">
-                        <section class="bg-white rounded-[26px] p-4 shadow-[0_4px_20px_rgba(0,0,0,0.04)] border border-neutral-100/90 flex flex-col">
-                            <div id="calDayHeader" class="flex items-center justify-between pb-3 border-b border-neutral-100/60">
-                                <span class="text-[15px] font-bold text-neutral-900">Friday, May 16</span>
-                                <span id="calDayEventCount" class="text-[11px] bg-neutral-100 px-3 py-0.5 rounded-full font-semibold">4 events</span>
-                            </div>
-                            <div id="calDayTimeline" class="mt-3 space-y-3 max-h-[340px] overflow-y-auto no-scrollbar"></div>
                         </section>
                     </div>
 
@@ -990,38 +999,121 @@
 
         const calEvents = [
             // May 12
-            { date: '2026-05-12', title: 'Team Sync', time: '08:00 AM', location: 'Zoom', type: 'meeting' },
-            { date: '2026-05-12', title: 'Calculus Review', time: '02:00 PM', location: 'Library', type: 'focus' },
+            { date: '2026-05-12', title: 'Team Sync', time: '08:00 AM', location: '📍 Zoom', type: 'meeting', icon: '📋', badgeText: 'Sync', durationText: '30m' },
+            { date: '2026-05-12', title: 'Calculus Review', time: '02:00 PM', location: '📍 Library', type: 'focus', icon: '💻', badgeText: 'Focus', durationText: '90m' },
             
             // May 13
-            { date: '2026-05-13', title: 'Office Hours', time: '02:00 PM', location: 'Dr. A Office', type: 'meeting' },
-            { date: '2026-05-13', title: 'Study Group', time: '04:00 PM', location: 'Room 202', type: 'group' },
+            { date: '2026-05-13', title: 'Office Hours', time: '02:00 PM', location: '📍 Dr. A Office', type: 'meeting', icon: '📋', badgeText: 'Office Hours', durationText: '45m' },
+            { date: '2026-05-13', title: 'Study Group', time: '04:00 PM', location: '📍 Room 202', type: 'group', icon: '👥', badgeText: 'Group Study', durationText: '60m' },
             
             // May 14
-            { date: '2026-05-14', title: 'Seminar', time: '11:00 AM', location: 'Auditorium', type: 'talk' },
-            { date: '2026-05-14', title: 'Physics Lab', time: '01:00 PM', location: 'Lab 3', type: 'lab' },
+            { date: '2026-05-14', title: 'Seminar', time: '11:00 AM', location: '📍 Auditorium', type: 'talk', icon: '🎤', badgeText: 'Seminar', durationText: '60m' },
+            { date: '2026-05-14', title: 'Physics Lab', time: '01:00 PM', location: '📍 Lab 3', type: 'lab', icon: '🔬', badgeText: 'Lab Session', durationText: '120m' },
             
             // May 15
-            { date: '2026-05-15', title: 'Morning Lecture', time: '09:00 AM', location: 'Hall 302', type: 'fixed' },
-            { date: '2026-05-15', title: 'Lunch Break', time: '12:00 PM', location: 'Cafeteria', type: 'free' },
-            { date: '2026-05-15', title: 'Study Session', time: '03:00 PM', location: 'Quiet Zone', type: 'focus' },
+            { date: '2026-05-15', title: 'Morning Lecture', time: '09:00 AM', location: '📍 Hall 302', type: 'fixed', icon: '📚', badgeText: 'Fixed Event', durationText: '60m' },
+            { date: '2026-05-15', title: 'Lunch Break', time: '12:00 PM', location: '📍 Cafeteria', type: 'free', icon: '🍽️', badgeText: 'Free Time', durationText: '45m' },
+            { date: '2026-05-15', title: 'Study Session', time: '03:00 PM', location: '📍 Quiet Zone', type: 'focus', icon: '💻', badgeText: 'Deep Focus', durationText: '90m' },
             
-            // May 16 (Today)
-            { date: '2026-05-16', title: 'Morning Meditation', time: '07:00 AM', location: 'Home', type: 'recovery' },
-            { date: '2026-05-16', title: 'Physics Lecture', time: '11:00 AM', location: 'Hall 104 · Dr. Aris', type: 'fixed' },
-            { date: '2026-05-16', title: 'Deep Study: Quantum', time: '02:00 PM', location: 'Library Quiet Wing · Floor 3', type: 'focus' },
-            { date: '2026-05-16', title: 'Badminton Training', time: '05:00 PM', location: 'Sports Complex · Court 4', type: 'sport' },
+            // May 16 (Today - Schedule & Timeline matching user reference)
+            {
+                date: '2026-05-16',
+                time: '10:00 AM',
+                title: 'Mathematics Lecture',
+                location: '📍 Hall B4 · 🧠 High Mental Load',
+                type: 'fixed',
+                icon: '🏫',
+                badgeText: 'Fixed Event',
+                badgeClass: 'bg-[#1C1C1E] text-white',
+                badgeDot: '•',
+                durationText: '90m'
+            },
+            {
+                date: '2026-05-16',
+                time: '11:30 AM',
+                title: 'Recovery Time',
+                location: 'Quiet walk & outdoor mindfulness in quad garden',
+                type: 'recovery',
+                icon: '🌿',
+                badgeText: 'Recovery',
+                badgeClass: 'bg-neutral-100 text-neutral-900 border border-neutral-200',
+                badgeIcon: '🌿',
+                durationText: '+15% recharge',
+                isProgress: true,
+                progressPercent: 65,
+                progressLabel: 'Restoring'
+            },
+            {
+                date: '2026-05-16',
+                time: '12:00 PM',
+                title: 'Lunch & Social Break',
+                location: '🍴 Student Union Atrium with Study Pod',
+                type: 'free',
+                icon: '🍽️',
+                badgeText: 'Free Time',
+                badgeClass: 'bg-neutral-100 text-neutral-700 border border-neutral-200',
+                badgeIcon: '☕',
+                durationText: '1h 30m'
+            },
+            {
+                date: '2026-05-16',
+                time: '02:00 PM',
+                title: 'Assignment: Discrete Math',
+                location: 'Library Quiet Wing · Floor 3',
+                type: 'focus',
+                icon: '📚',
+                badgeText: 'Smart Slotted',
+                badgeClass: 'bg-[#1C1C1E] text-white',
+                badgeIcon: '✦',
+                durationText: '98% Circadian Match',
+                sprint: 'Focus Sprint: Proofs & Graphs'
+            },
+            {
+                date: '2026-05-16',
+                time: '03:30 PM',
+                title: 'Short Break / Snack',
+                location: 'Hydration & brain recharge',
+                type: 'break',
+                icon: '☕',
+                badgeText: 'Free Time',
+                badgeClass: 'bg-neutral-100 text-neutral-700 border border-neutral-200',
+                durationText: '30m',
+                rightEmoji: '🍎'
+            },
+            {
+                date: '2026-05-16',
+                time: '05:00 PM',
+                title: 'Badminton Practice',
+                location: 'Sports Center Court 2 · High Physical, Low Mental',
+                type: 'sport',
+                icon: '🏸',
+                badgeText: 'Fixed Event',
+                badgeClass: 'bg-[#1C1C1E] text-white',
+                badgeDot: '•',
+                durationText: '75m'
+            },
+            {
+                date: '2026-05-16',
+                time: '07:30 PM',
+                title: 'Grocery & Dorm Supplies',
+                location: "Trader Joe's • Greek yogurt, oats, fruit, notebook refill",
+                type: 'errand',
+                icon: '🛒',
+                badgeText: 'Temporary Task / Errands',
+                badgeClass: 'bg-neutral-100 text-neutral-700 border border-neutral-200',
+                durationText: '60m'
+            },
             
             // May 17
-            { date: '2026-05-17', title: 'Yoga Class', time: '09:00 AM', location: 'Fitness Center', type: 'sport' },
-            { date: '2026-05-17', title: 'Brunch', time: '10:30 AM', location: 'Campus Cafe', type: 'free' },
-            { date: '2026-05-17', title: 'Study Group', time: '01:00 PM', location: 'Room 202', type: 'group' },
-            { date: '2026-05-17', title: 'Physics Review', time: '03:00 PM', location: 'Library', type: 'focus' },
+            { date: '2026-05-17', title: 'Yoga Class', time: '09:00 AM', location: '📍 Fitness Center', type: 'sport', icon: '🧘', badgeText: 'Workout', durationText: '60m' },
+            { date: '2026-05-17', title: 'Brunch', time: '10:30 AM', location: '📍 Campus Cafe', type: 'free', icon: '🍽️', badgeText: 'Free Time', durationText: '60m' },
+            { date: '2026-05-17', title: 'Study Group', time: '01:00 PM', location: '📍 Room 202', type: 'group', icon: '👥', badgeText: 'Group Study', durationText: '90m' },
+            { date: '2026-05-17', title: 'Physics Review', time: '03:00 PM', location: '📍 Library', type: 'focus', icon: '💻', badgeText: 'Deep Focus', durationText: '90m' },
             
             // May 18
-            { date: '2026-05-18', title: 'Physics Lab', time: '09:00 AM', location: 'Lab 4', type: 'lab' },
-            { date: '2026-05-18', title: 'Office Hours', time: '11:00 AM', location: 'Dr. Smith Office', type: 'meeting' },
-            { date: '2026-05-18', title: 'Research Meeting', time: '02:00 PM', location: 'Conference Room', type: 'meeting' },
+            { date: '2026-05-18', title: 'Physics Lab', time: '09:00 AM', location: '📍 Lab 4', type: 'lab', icon: '🔬', badgeText: 'Lab Session', durationText: '120m' },
+            { date: '2026-05-18', title: 'Office Hours', time: '11:00 AM', location: '📍 Dr. Smith Office', type: 'meeting', icon: '📋', badgeText: 'Office Hours', durationText: '45m' },
+            { date: '2026-05-18', title: 'Research Meeting', time: '02:00 PM', location: '📍 Conference Room', type: 'meeting', icon: '📋', badgeText: 'Meeting', durationText: '60m' }
         ];
 
         function getCalEventsForDate(dateStr) {
@@ -1182,60 +1274,149 @@
             calViewTitle.textContent = `${startStr} – ${endStr}`;
         }
 
-        // Render Day View
+        // Render Day View (Schedule & Timeline with sleek vertical line, nodes, and black simple cards)
         function renderCalDay(year, month, date) {
-            if (!calDayHeader || !calDayTimeline) return;
+            if (!calDayTimeline) return;
             const dt = new Date(year, month, date);
             const ds = dt.toISOString().slice(0, 10);
-            const dayName = dt.toLocaleString('default', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            const dayName = dt.toLocaleString('default', { weekday: 'long', month: 'short', day: 'numeric' });
             const evs = getCalEventsForDate(ds);
             
-            calDayHeader.innerHTML = `
-                <span class="text-[15px] font-bold text-neutral-900">${dayName}</span>
-                <span class="text-[11px] bg-neutral-100 px-3 py-0.5 rounded-full font-semibold">${evs.length} events</span>
-            `;
-            calDayEventCount.textContent = evs.length + ' events';
+            if (calViewTitle) {
+                calViewTitle.textContent = dayName;
+            }
+            if (calDayHeader) {
+                calDayHeader.innerHTML = `
+                    <span class="text-[15px] font-bold text-neutral-900">${dayName}</span>
+                    <span class="text-[11px] bg-neutral-100 px-3 py-0.5 rounded-full font-semibold">${evs.length} events</span>
+                `;
+            }
+            if (calDayEventCount) {
+                calDayEventCount.textContent = evs.length + ' events';
+            }
             
             let html = '';
             if (evs.length === 0) {
-                html = `<div class="text-center text-neutral-400 text-sm py-8 flex flex-col items-center space-y-2">
-                    <span class="material-symbols-outlined text-[32px] text-neutral-300">event_available</span>
-                    <span>No events scheduled for this day</span>
-                    <button onclick="openAddEventModal()" class="text-[11.5px] font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full mt-1">+ Add New Event</button>
-                </div>`;
+                html = `
+                    <div class="bg-white rounded-[24px] p-8 text-center text-neutral-400 border border-neutral-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] flex flex-col items-center justify-center space-y-2.5">
+                        <div class="w-12 h-12 rounded-2xl bg-neutral-100 flex items-center justify-center text-neutral-400">
+                            <span class="material-symbols-outlined text-[28px]">event_available</span>
+                        </div>
+                        <h4 class="text-[14px] font-bold text-neutral-800">No events scheduled</h4>
+                        <p class="text-[11px] text-neutral-500">Enjoy your free time or schedule a new task.</p>
+                        <button onclick="openAddEventModal()" class="text-[11.5px] font-bold text-white bg-[#1C1C1E] hover:bg-black px-4 py-2 rounded-full shadow-sm active:scale-95 transition-all cursor-pointer mt-1">+ Add Daily Task</button>
+                    </div>
+                `;
             } else {
-                evs.forEach(e => {
+                html = '<div class="space-y-3.5">';
+                evs.forEach((e, idx) => {
+                    const isLast = idx === evs.length - 1;
+                    const timeParts = (e.time || '10:00 AM').split(' ');
+                    const timeHour = timeParts[0] || '10:00';
+                    const timeAmPm = timeParts[1] || 'AM';
+
                     const iconMap = {
-                        fixed: '📚',
-                        recovery: '🧘',
-                        free: '🍽️',
-                        focus: '💻',
+                        fixed: '🏫',
+                        recovery: '🌿',
+                        free: '☕',
+                        focus: '📚',
                         break: '☕',
                         sport: '🏸',
+                        errand: '🛒',
                         group: '👥',
                         talk: '🎤',
                         meeting: '📋',
                         lab: '🔬'
                     };
-                    const icon = iconMap[e.type] || '📌';
+                    const icon = e.icon || iconMap[e.type] || '📌';
+                    const badgeText = e.badgeText || (e.type === 'fixed' ? 'Fixed Event' : (e.type === 'recovery' ? 'Recovery' : (e.type === 'focus' ? 'Smart Slotted' : 'Free Time')));
+                    const durationText = e.durationText || e.meta || '60m';
+
+                    // Black simple styling for badges & nodes
+                    let badgeClass = e.badgeClass;
+                    let nodeClass = 'bg-[#1C1C1E] ring-4 ring-[#EDEDED]';
+
+                    if (!badgeClass) {
+                        if (e.type === 'fixed' || e.type === 'sport') {
+                            badgeClass = 'bg-[#1C1C1E] text-white';
+                            nodeClass = 'bg-[#1C1C1E] ring-4 ring-[#EDEDED]';
+                        } else if (e.type === 'recovery') {
+                            badgeClass = 'bg-neutral-100 text-neutral-900 border border-neutral-200/90';
+                            nodeClass = 'bg-neutral-800 ring-4 ring-[#EDEDED]';
+                        } else if (e.type === 'focus' || e.type === 'smart') {
+                            badgeClass = 'bg-[#1C1C1E] text-white';
+                            nodeClass = 'bg-[#1C1C1E] ring-4 ring-[#EDEDED]';
+                        } else {
+                            badgeClass = 'bg-neutral-100 text-neutral-700 border border-neutral-200/90';
+                            nodeClass = 'bg-neutral-400 ring-4 ring-[#EDEDED]';
+                        }
+                    }
+
                     html += `
-                        <div class="bg-white rounded-[22px] p-3.5 shadow-sm border border-neutral-200/50 flex items-center justify-between hover:shadow-md transition-shadow">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-2xl bg-neutral-100 flex items-center justify-center text-[18px] shrink-0">
-                                    ${icon}
-                                </div>
-                                <div>
-                                    <h4 class="text-[13.5px] font-bold text-neutral-900 leading-snug">${e.title}</h4>
-                                    <p class="text-[11px] text-neutral-500 mt-0.5">📍 ${e.location || 'Campus'}</p>
-                                </div>
+                        <div class="relative flex items-start space-x-3 group">
+                            <!-- Left Column: Time -->
+                            <div class="w-[52px] pt-1 text-right shrink-0">
+                                <span class="text-[12.5px] font-extrabold text-[#161617] tracking-tight block leading-tight">${timeHour}</span>
+                                <span class="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">${timeAmPm}</span>
                             </div>
-                            <span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-neutral-100 text-neutral-700 shrink-0">${e.time}</span>
+
+                            <!-- Center Timeline Line & Node -->
+                            <div class="relative flex flex-col items-center self-stretch shrink-0">
+                                ${!isLast ? '<div class="w-[2px] bg-neutral-200/90 absolute top-4 -bottom-4 left-1/2 -translate-x-1/2"></div>' : ''}
+                                <div class="w-3.5 h-3.5 rounded-full ${nodeClass} z-10 shrink-0 mt-1"></div>
+                            </div>
+
+                            <!-- Right Event Card (Black & Clean Minimalist Style) -->
+                            <div class="flex-1 bg-white rounded-[22px] p-3.5 border border-neutral-200/80 shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-md transition-all space-y-2">
+                                <!-- Card Header: Badge & Duration/Status -->
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full inline-flex items-center space-x-1 ${badgeClass}">
+                                        ${e.badgeDot ? `<span class="text-xs leading-none mr-0.5">${e.badgeDot}</span>` : ''}
+                                        ${e.badgeIcon ? `<span class="mr-0.5">${e.badgeIcon}</span>` : ''}
+                                        <span>${badgeText}</span>
+                                    </span>
+                                    <span class="text-[11px] font-bold text-neutral-500">${durationText}</span>
+                                </div>
+
+                                <!-- Card Title -->
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-[14px] font-extrabold text-[#161617] tracking-tight flex items-center space-x-1.5">
+                                        <span>${icon}</span>
+                                        <span>${e.title}</span>
+                                    </h4>
+                                    ${e.rightEmoji ? `<span class="text-base">${e.rightEmoji}</span>` : ''}
+                                </div>
+
+                                <!-- Card Location / Details -->
+                                ${e.location ? `<p class="text-[11px] font-medium text-neutral-500 leading-snug">${e.location}</p>` : ''}
+
+                                <!-- Recovery Progress Bar -->
+                                ${e.isProgress ? `
+                                    <div class="pt-1 flex items-center justify-between gap-2.5">
+                                        <div class="flex-1 bg-neutral-100 h-1.5 rounded-full overflow-hidden">
+                                            <div class="bg-[#1C1C1E] h-full rounded-full" style="width: ${e.progressPercent || 65}%"></div>
+                                        </div>
+                                        <span class="text-[10px] font-bold text-neutral-700 tracking-tight shrink-0">${e.progressLabel || 'Restoring'}</span>
+                                    </div>
+                                ` : ''}
+
+                                <!-- Smart Slotted Focus Sprint Capsule -->
+                                ${e.sprint ? `
+                                    <div class="mt-1 flex items-center justify-between bg-neutral-100/90 rounded-full px-2.5 py-1 text-[10.5px] font-semibold text-neutral-800">
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-[#1C1C1E]"></span>
+                                            <span>${e.sprint}</span>
+                                        </div>
+                                        <span class="material-symbols-outlined text-[14px] text-neutral-400">more_horiz</span>
+                                    </div>
+                                ` : ''}
+                            </div>
                         </div>
                     `;
                 });
+                html += '</div>';
             }
             calDayTimeline.innerHTML = html;
-            calViewTitle.textContent = dt.toLocaleString('default', { month: 'long', day: 'numeric', year: 'numeric' });
         }
 
         // Navigation (Prev / Next)
@@ -1368,7 +1549,29 @@
             const type = selectedEventTypeInput.value || 'focus';
 
             // Add to calendar events
-            const newEvent = { date, title, time, location, type };
+            const iconMap = {
+                focus: '💻',
+                fixed: '📚',
+                recovery: '🧘',
+                sport: '🏸'
+            };
+            const badgeMap = {
+                focus: 'Deep Focus',
+                fixed: 'Fixed Event',
+                recovery: 'Recovery',
+                sport: 'Workout'
+            };
+            const newEvent = {
+                date,
+                title,
+                time,
+                location: location ? (location.startsWith('📍') ? location : `📍 ${location}`) : '📍 Campus',
+                type,
+                icon: iconMap[type] || '📌',
+                badgeText: badgeMap[type] || 'Daily Task',
+                badgeClass: (type === 'focus' || type === 'fixed' || type === 'sport') ? 'bg-[#1C1C1E] text-white' : 'bg-neutral-100 text-neutral-900 border border-neutral-200/90',
+                durationText: '60m'
+            };
             calEvents.push(newEvent);
 
             // If date is Today (2026-05-16), prepend to Today's daily task list
@@ -1439,13 +1642,13 @@
             if (calPrevBtn) calPrevBtn.addEventListener('click', () => calNavigate(-1));
             if (calNextBtn) calNextBtn.addEventListener('click', () => calNavigate(1));
 
-            // Default: month view
-            setCalView('month');
+            // Default: Day view (Schedule & Timeline)
+            setCalView('day');
             
             // Render the dark pill dock matching the user reference
             renderBottomDock();
             
-            // Set initial screen (Calendar matching the screenshot, or Today)
+            // Set initial screen (Calendar matching the user request)
             switchScreen('calendar');
         });
     </script>
