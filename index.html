@@ -370,26 +370,37 @@
                         </div>
                     </div>
 
-                    <!-- WEEK VIEW -->
-                    <div id="calWeekView" class="view-transition view-hidden w-full">
-                        <section class="bg-white rounded-[26px] border border-neutral-100/90 shadow-[0_4px_20px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col">
-                            <div class="overflow-x-auto no-scrollbar border-b border-neutral-100 bg-[#f8f9fa]">
-                                <div id="calWeekHeader" class="flex items-center min-w-[340px] pl-10 pr-2 py-2"></div>
-                            </div>
-                            <div class="overflow-y-auto overflow-x-auto no-scrollbar max-h-[340px] bg-white">
-                                <div id="calWeekGrid" class="min-w-[340px] relative pb-2"></div>
-                            </div>
-                            <div class="border-t border-neutral-100 bg-[#f8f9fa] p-2.5 px-3 flex items-center justify-between shrink-0">
-                                <div class="flex items-center space-x-2">
-                                    <span class="w-2 h-2 rounded-full bg-[#161719]"></span>
-                                    <span id="calWeekActiveDay" class="text-[11px] font-bold text-neutral-800">Thursday, May 16</span>
-                                    <span id="calWeekEventCount" class="text-[10px] font-semibold text-neutral-500 bg-neutral-200/70 px-1.5 py-0.5 rounded-full">7 events</span>
-                                </div>
-                                <button onclick="openAddEventModal()" class="flex items-center space-x-1 text-[11px] font-bold text-neutral-800 hover:text-black bg-white px-2.5 py-1 rounded-full shadow-sm border border-neutral-200/80 active:scale-95 transition">
-                                    <span>+ New</span>
+                    <!-- WEEK VIEW (Minimalist Modern Planner matching user reference) -->
+                    <div id="calWeekView" class="view-transition view-hidden w-full space-y-3">
+                        <!-- Top Header: Month Title & Minimalist Icons matching reference image -->
+                        <div class="flex items-center justify-between px-1 pt-1">
+                            <h3 id="calWeekMonthTitle" class="text-[20px] font-black text-neutral-900 tracking-tight">May</h3>
+                            <div class="flex items-center space-x-2 text-neutral-500">
+                                <button onclick="setCalView('day')" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-neutral-100 hover:text-black transition cursor-pointer" title="Day View">
+                                    <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+                                </button>
+                                <button class="w-8 h-8 rounded-full flex items-center justify-center text-neutral-900 bg-neutral-100 transition cursor-pointer" title="Week Grid View">
+                                    <span class="material-symbols-outlined text-[20px]">view_week</span>
+                                </button>
+                                <button onclick="openAddEventModal()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-neutral-100 hover:text-black transition cursor-pointer" title="Add Event">
+                                    <span class="material-symbols-outlined text-[20px]">more_vert</span>
                                 </button>
                             </div>
-                        </section>
+                        </div>
+
+                        <!-- Days of Week Row (S M T W T F S + Date numbers with active circle) -->
+                        <div id="calWeekHeader" class="w-full flex items-center justify-between px-1">
+                            <!-- Populated dynamically via renderCalWeek -->
+                        </div>
+
+                        <!-- Schedule Timetable Grid Card -->
+                        <div class="bg-white rounded-[26px] p-3 shadow-soft border border-neutral-150/60 overflow-hidden">
+                            <div class="overflow-y-auto no-scrollbar max-h-[350px] pr-0.5">
+                                <div id="calWeekGrid" class="w-full relative">
+                                    <!-- Populated dynamically via renderCalWeek -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- MONTH VIEW -->
@@ -715,7 +726,23 @@
         <!-- ========================================================== -->
         <div class="absolute bottom-3.5 inset-x-3 z-40 flex justify-center pointer-events-none" data-purpose="bottom-navigation-container">
             <nav id="navDockContainer" class="w-full max-w-[334px] bg-[#161617] rounded-full px-2 py-1.5 shadow-dock border border-white/10 flex items-center justify-between pointer-events-auto select-none" data-purpose="floating-navigation-dock">
-                <!-- Dynamically rendered via renderBottomDock() -->
+                <button onclick="switchScreen('today')" class="bg-white text-[#111111] w-10 h-10 rounded-full flex items-center justify-center shadow-sm active:scale-95 transition-all cursor-pointer shrink-0">
+                    <svg class="w-[18px] h-[18px] stroke-current stroke-[2.1]" fill="none" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1.5 1.5 0 0 1-1.5 1.5H4.5A1.5 1.5 0 0 1 3 20V9.5z" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21V12h6v9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button onclick="switchScreen('rhythm')" class="text-[#8E8E93] hover:text-white w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform cursor-pointer shrink-0">
+                    <svg class="w-[18px] h-[18px] stroke-current stroke-[2.1]" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" stroke-linecap="round"/><polyline points="12 6.5 12 12 15.5 14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button onclick="openAddEventModal()" class="w-10 h-10 rounded-full bg-[#1C1C1E] hover:bg-[#2C2C2E] text-white flex items-center justify-center shadow-[0_6px_20px_rgba(0,0,0,0.38)] border-2 border-white/10 active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer group shrink-0" title="Add Task">
+                    <svg class="w-5 h-5 stroke-[2.8] transition-transform duration-200 group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button onclick="switchScreen('calendar')" class="text-[#8E8E93] hover:text-white w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform cursor-pointer shrink-0">
+                    <svg class="w-[17px] h-[17px] stroke-current stroke-[2.1]" fill="none" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16" rx="2.5" stroke-linecap="round"/><line x1="16" y1="2" x2="16" y2="6.5" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6.5" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round"/></svg>
+                </button>
+                <button onclick="switchScreen('profile')" class="text-[#8E8E93] hover:text-white w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform cursor-pointer shrink-0">
+                    <svg class="w-[18px] h-[18px] stroke-current stroke-[2.1]" fill="none" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke-linecap="round"/></svg>
+                </button>
             </nav>
         </div>
         <!-- END: Bottom Navigation Dock -->
@@ -853,7 +880,7 @@
             profile: document.getElementById('screen-profile')
         };
         
-        let currentScreen = 'calendar'; // Start on calendar view matching user's image!
+        let currentScreen = 'today';
 
         // SVG icon definition helper for the dark pill dock
         function getDockSvg(iconType) {
@@ -985,9 +1012,20 @@
         let calView = 'month';
 
         const calEvents = [
+            // May 10 (Sunday)
+            { date: '2026-05-10', title: 'Sunday Brunch', time: '11:00 AM', location: '📍 Campus Bistro', type: 'free', icon: '🍽️', badgeText: 'Free Time', durationText: '60m' },
+            { date: '2026-05-10', title: 'Open Gym Session', time: '03:00 PM', location: '📍 Fitness Center', type: 'sport', icon: '🏃', badgeText: 'Workout', durationText: '60m' },
+
+            // May 11 (Monday)
+            { date: '2026-05-11', title: 'Linear Algebra', time: '09:00 AM', location: '📍 Hall A1', type: 'fixed', icon: '📐', badgeText: 'Lecture', durationText: '90m' },
+            { date: '2026-05-11', title: 'Lunch Break', time: '12:00 PM', location: '📍 Student Union', type: 'free', icon: '🥪', badgeText: 'Free Time', durationText: '45m' },
+            { date: '2026-05-11', title: 'Algorithm Prep', time: '02:00 PM', location: '📍 Library Wing B', type: 'focus', icon: '💻', badgeText: 'Deep Focus', durationText: '90m' },
+            { date: '2026-05-11', title: 'Evening Walk', time: '05:00 PM', location: '📍 Central Quad', type: 'recovery', icon: '🌿', badgeText: 'Recovery', durationText: '45m' },
+
             // May 12
             { date: '2026-05-12', title: 'Team Sync', time: '08:00 AM', location: '📍 Zoom', type: 'meeting', icon: '📋', badgeText: 'Sync', durationText: '30m' },
             { date: '2026-05-12', title: 'Calculus Review', time: '02:00 PM', location: '📍 Library', type: 'focus', icon: '💻', badgeText: 'Focus', durationText: '90m' },
+            { date: '2026-05-12', title: 'Campus Run', time: '05:00 PM', location: '📍 Track Field', type: 'sport', icon: '👟', badgeText: 'Sport', durationText: '45m' },
             
             // May 13
             { date: '2026-05-13', title: 'Office Hours', time: '02:00 PM', location: '📍 Dr. A Office', type: 'meeting', icon: '📋', badgeText: 'Office Hours', durationText: '45m' },
@@ -1229,7 +1267,32 @@
             // May 18
             { date: '2026-05-18', title: 'Physics Lab', time: '09:00 AM', location: '📍 Lab 4', type: 'lab', icon: '🔬', badgeText: 'Lab Session', durationText: '120m' },
             { date: '2026-05-18', title: 'Office Hours', time: '11:00 AM', location: '📍 Dr. Smith Office', type: 'meeting', icon: '📋', badgeText: 'Office Hours', durationText: '45m' },
-            { date: '2026-05-18', title: 'Research Meeting', time: '02:00 PM', location: '📍 Conference Room', type: 'meeting', icon: '📋', badgeText: 'Meeting', durationText: '60m' }
+            { date: '2026-05-18', title: 'Research Meeting', time: '02:00 PM', location: '📍 Conference Room', type: 'meeting', icon: '📋', badgeText: 'Meeting', durationText: '60m' },
+
+            // May 19
+            { date: '2026-05-19', title: 'Algorithm Design', time: '10:00 AM', location: '📍 Hall 201', type: 'focus', icon: '💻', badgeText: 'Deep Focus', durationText: '90m' },
+            { date: '2026-05-19', title: 'Lunch Break', time: '12:00 PM', location: '📍 Dining Hall', type: 'free', icon: '🥪', badgeText: 'Free Time', durationText: '45m' },
+            { date: '2026-05-19', title: 'Badminton Practice', time: '04:00 PM', location: '📍 Court 2', type: 'sport', icon: '🏸', badgeText: 'Sport', durationText: '60m' },
+
+            // May 20
+            { date: '2026-05-20', title: 'Chemistry Lecture', time: '09:00 AM', location: '📍 Hall 105', type: 'fixed', icon: '🧪', badgeText: 'Lecture', durationText: '90m' },
+            { date: '2026-05-20', title: 'Office Hours', time: '01:00 PM', location: '📍 Dr. Lee Office', type: 'meeting', icon: '📋', badgeText: 'Office Hours', durationText: '45m' },
+            { date: '2026-05-20', title: 'Study Group', time: '03:00 PM', location: '📍 Study Room 3', type: 'focus', icon: '👥', badgeText: 'Study', durationText: '60m' },
+
+            // May 21
+            { date: '2026-05-21', title: 'Physics Seminar', time: '11:00 AM', location: '📍 Auditorium', type: 'fixed', icon: '🎤', badgeText: 'Seminar', durationText: '60m' },
+            { date: '2026-05-21', title: 'Circuit Lab', time: '02:00 PM', location: '📍 EE Lab', type: 'lab', icon: '🔬', badgeText: 'Lab Session', durationText: '90m' },
+            { date: '2026-05-21', title: 'Evening Walk', time: '05:00 PM', location: '📍 Lake Trail', type: 'recovery', icon: '🌿', badgeText: 'Recovery', durationText: '45m' },
+
+            // May 22
+            { date: '2026-05-22', title: 'Math Colloquium', time: '10:00 AM', location: '📍 Main Hall', type: 'fixed', icon: '📐', badgeText: 'Lecture', durationText: '90m' },
+            { date: '2026-05-22', title: 'Lunch Break', time: '12:00 PM', location: '📍 Campus Cafe', type: 'free', icon: '☕', badgeText: 'Break', durationText: '45m' },
+            { date: '2026-05-22', title: 'Deep Focus', time: '03:00 PM', location: '📍 Library Quiet', type: 'focus', icon: '💻', badgeText: 'Deep Focus', durationText: '90m' },
+
+            // May 23
+            { date: '2026-05-23', title: 'Weekend Jog', time: '09:00 AM', location: '📍 Stadium Track', type: 'sport', icon: '🏃', badgeText: 'Workout', durationText: '60m' },
+            { date: '2026-05-23', title: 'Reading Time', time: '01:00 PM', location: '📍 Lounge', type: 'free', icon: '📖', badgeText: 'Free Time', durationText: '60m' },
+            { date: '2026-05-23', title: 'Project Wrap-up', time: '04:00 PM', location: '📍 Library Wing C', type: 'focus', icon: '💻', badgeText: 'Focus', durationText: '90m' }
         ];
 
         function formatDateStr(year, month, date) {
@@ -1243,19 +1306,17 @@
             return calEvents.filter(e => e.date === dateStr);
         }
 
-        function getMonday(date) {
+        function getSunday(date) {
             const d = new Date(date);
             const day = d.getDay();
-            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-            return new Date(d.setDate(diff));
+            d.setDate(d.getDate() - day);
+            return d;
         }
 
-        // DOM references
+        // DOM references for Calendar
         const calMonthGrid = document.getElementById('calMonthGrid');
         const calWeekHeader = document.getElementById('calWeekHeader');
         const calWeekGrid = document.getElementById('calWeekGrid');
-        const calWeekActiveDay = document.getElementById('calWeekActiveDay');
-        const calWeekEventCount = document.getElementById('calWeekEventCount');
         const calDayHeader = document.getElementById('calDayHeader');
         const calDayTimeline = document.getElementById('calDayTimeline');
         const calDayEventCount = document.getElementById('calDayEventCount');
@@ -1275,12 +1336,12 @@
             if (!calMonthGrid) return;
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const todayStr = '2026-05-16';
+            const todayStr = '2026-05-17';
             const offset = (firstDay === 0) ? 6 : firstDay - 1;
             let html = '';
             for (let i = 0; i < offset; i++) html += '<div class="w-8 h-8"></div>';
             for (let d = 1; d <= daysInMonth; d++) {
-                const ds = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+                const ds = formatDateStr(year, month, d);
                 const isToday = ds === todayStr;
                 const evs = getCalEventsForDate(ds);
                 const hasEvent = evs.length > 0;
@@ -1298,8 +1359,8 @@
             }
             calMonthGrid.innerHTML = html;
             const monthName = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
-            calViewTitle.textContent = monthName;
-            calMonthLabel.textContent = monthName;
+            if (calViewTitle) calViewTitle.textContent = monthName;
+            if (calMonthLabel) calMonthLabel.textContent = monthName;
         }
 
         function openDayFromMonth(dateStr, dayNum) {
@@ -1307,94 +1368,150 @@
             setCalView('day');
         }
 
-        // Render Week View
-        function renderCalWeek(year, month, startDate) {
+        // Helper to get the top uncompleted task for a specific date (ignores breaks, recovery, lunch)
+        function getTopUncompletedTaskForDate(dateStr) {
+            const evs = getCalEventsForDate(dateStr);
+            const nonTaskTypes = ['free', 'recovery', 'break'];
+            const tasks = evs.filter(e => !nonTaskTypes.includes(e.type) && !e.completed);
+            
+            if (tasks.length === 0) return null;
+            
+            const priorityOrder = {
+                'focus': 1,
+                'smart': 1,
+                'fixed': 2,
+                'lab': 2,
+                'sport': 3,
+                'meeting': 4,
+                'errand': 5
+            };
+            
+            tasks.sort((a, b) => {
+                const pa = priorityOrder[a.type] || 99;
+                const pb = priorityOrder[b.type] || 99;
+                return pa - pb;
+            });
+            
+            return tasks[0];
+        }
+
+        function getTaskHour(task) {
+            if (!task || !task.time) return 9;
+            const parts = task.time.split(':');
+            let h = parseInt(parts[0]);
+            const isPM = task.time.includes('PM');
+            const isAM = task.time.includes('AM');
+            if (isPM && h !== 12) h += 12;
+            if (isAM && h === 12) h = 0;
+            return h;
+        }
+
+        // Render Week View (Original Timetable Grid Style: shows only that day's uncompleted most important task with its name)
+        function renderCalWeek(year, month, refDate) {
             if (!calWeekHeader || !calWeekGrid) return;
+            const ref = new Date(year, month, refDate);
+            const sunday = getSunday(ref);
             const weekDays = [];
             for (let i = 0; i < 7; i++) {
-                weekDays.push(new Date(year, month, startDate + i));
+                weekDays.push(new Date(sunday.getFullYear(), sunday.getMonth(), sunday.getDate() + i));
             }
-            const todayStr = '2026-05-17';
-            
-            // Header
+
+            // Month title matching reference image "May"
+            const monthTitle = sunday.toLocaleString('default', { month: 'long' });
+            const monthTitleEl = document.getElementById('calWeekMonthTitle');
+            if (monthTitleEl) monthTitleEl.textContent = monthTitle;
+
+            // Days row (S M T W T F S)
+            const dayLetters = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
             let headerHtml = '';
-            weekDays.forEach(d => {
+            weekDays.forEach((d, i) => {
                 const ds = formatDateStr(d.getFullYear(), d.getMonth(), d.getDate());
-                const isToday = ds === todayStr;
+                const isSelected = d.getDate() === calDate && d.getMonth() === calMonth;
                 const dayNum = d.getDate();
-                const dayName = d.toLocaleString('default', { weekday: 'short' });
-                const hasEvent = getCalEventsForDate(ds).length > 0;
+                const letter = dayLetters[i];
+                
                 headerHtml += `
-                    <div class="flex-1 flex flex-col items-center py-0.5 cursor-pointer ${isToday ? 'bg-neutral-100/60 rounded-xl' : ''}" onclick="openDayFromMonth('${ds}', ${dayNum})">
-                        <span class="text-[10px] ${isToday ? 'font-bold text-neutral-900' : 'font-medium text-neutral-400'} uppercase tracking-wider">${dayName}</span>
-                        <div class="w-7 h-7 rounded-full ${isToday ? 'bg-[#161719] text-white shadow-sm ring-1 ring-black/10' : ''} flex items-center justify-center text-[12px] font-semibold ${isToday ? 'font-bold' : 'text-neutral-700'} mt-0.5">${dayNum}</div>
-                        <span class="w-1 h-1 rounded-full ${hasEvent ? 'bg-emerald-500' : 'bg-transparent'} mt-0.5"></span>
+                    <div class="flex-1 flex flex-col items-center cursor-pointer select-none py-1" onclick="selectWeekDay(${d.getFullYear()}, ${d.getMonth()}, ${dayNum})">
+                        <span class="text-[11.5px] font-semibold text-neutral-400 mb-1.5">${letter}</span>
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-[12.5px] ${isSelected ? 'bg-white text-[#2563EB] shadow-[0_2px_8px_rgba(0,0,0,0.08)] ring-1 ring-neutral-200/60 font-extrabold' : 'font-bold text-neutral-700 hover:bg-neutral-100'} transition-all">
+                            ${dayNum}
+                        </div>
                     </div>
                 `;
             });
-            calWeekHeader.innerHTML = `<div class="flex items-center min-w-[340px] pl-10 pr-2 py-2">${headerHtml}</div>`;
+            calWeekHeader.innerHTML = headerHtml;
 
-            // Grid - Time slots
-            const timeSlots = ['08:00', '09:00', '10:00', '11:00', '12:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00'];
+            // Selected Day details
+            const selectedDs = formatDateStr(year, month, calDate);
+            const topTask = getTopUncompletedTaskForDate(selectedDs);
+            const topTaskHour = topTask ? getTaskHour(topTask) : null;
+
+            // Original Timetable Grid: hours 08 to 18
+            const timeSlots = ['08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18'];
             let gridHtml = '';
             timeSlots.forEach(t => {
-                const hour = parseInt(t);
-                const ampm = (hour >= 8 && hour < 12) ? 'AM' : 'PM';
-                let rowHtml = `<div class="flex border-b border-neutral-100 min-h-[52px]">`;
-                rowHtml += `<div class="w-10 shrink-0 text-right pr-2 pt-1.5 border-r border-neutral-100/80"><span class="text-[10px] font-bold text-neutral-400 leading-none block">${t}</span><span class="text-[8px] text-neutral-400 uppercase">${ampm}</span></div>`;
-                rowHtml += `<div class="flex-1 grid grid-cols-7 gap-1 p-1 relative">`;
+                const hourNum = parseInt(t);
+                let rowHtml = `<div class="flex items-stretch border-b border-neutral-100/80 min-h-[46px] last:border-b-0">`;
+                rowHtml += `<div class="w-6 shrink-0 pt-1 text-[11px] font-medium text-neutral-300 select-none">${t}</div>`;
+                rowHtml += `<div class="flex-1 grid grid-cols-7 gap-1.5 p-1 relative">`;
                 
                 for (let d = 0; d < 7; d++) {
                     const dateObj = weekDays[d];
                     const ds = formatDateStr(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+                    const isSelectedDay = ds === selectedDs;
                     const evs = getCalEventsForDate(ds);
                     
                     const matched = evs.find(e => {
-                        const eventHour = parseInt(e.time);
+                        const parts = e.time.split(':');
+                        let h = parseInt(parts[0]);
                         const isPM = e.time.includes('PM');
                         const isAM = e.time.includes('AM');
-                        const slotHour = parseInt(t);
-                        const slotIsPM = ampm === 'PM';
-                        
-                        return (eventHour === slotHour && ((isPM && slotIsPM) || (isAM && !slotIsPM))) ||
-                               (eventHour === 12 && slotHour === 12);
+                        if (isPM && h !== 12) h += 12;
+                        if (isAM && h === 12) h = 0;
+                        return h === hourNum;
                     });
                     
-                    let cellHtml = `<div class="h-full rounded">`;
+                    let cellHtml = `<div class="h-full w-full ${isSelectedDay ? 'bg-blue-50/15' : 'hover:bg-neutral-50/40'} rounded-md transition cursor-pointer" onclick="selectWeekDay(${dateObj.getFullYear()}, ${dateObj.getMonth()}, ${dateObj.getDate()})"></div>`;
+                    
+                    // Present every activity for every day of the week
                     if (matched) {
-                        const colors = {
-                            fixed: 'bg-[#2563EB] text-white border-blue-600',
-                            recovery: 'bg-[#E8F8F0] border-[#A7F3D0] text-[#065F46]',
-                            free: 'bg-indigo-50 border-indigo-100 text-[#4F46E5]',
-                            focus: 'bg-purple-600 text-white border-purple-700',
-                            break: 'bg-slate-100 border-slate-200 text-slate-700',
-                            sport: 'bg-blue-100 border-blue-200 text-blue-800',
-                            group: 'bg-indigo-50 border-indigo-200 text-indigo-900',
-                            talk: 'bg-rose-50 border-rose-200 text-rose-900',
-                            meeting: 'bg-[#f0f4f9] border-neutral-200 text-neutral-900',
-                            lab: 'bg-cyan-50 border-cyan-200 text-cyan-900'
-                        };
-                        const bg = colors[matched.type] || 'bg-white border-neutral-200 text-neutral-900';
-                        const isDark = matched.type === 'fixed' || matched.type === 'focus';
-                        cellHtml = `<div class="h-full ${bg} border rounded-lg p-1 flex flex-col justify-center cursor-pointer shadow-sm active:scale-95 transition-transform"><span class="text-[8.5px] font-bold ${isDark ? 'text-white' : 'text-neutral-900'} leading-tight truncate">${matched.title}</span><span class="text-[7.5px] ${isDark ? 'text-neutral-300' : 'text-neutral-500'} truncate">${matched.time}</span></div>`;
+                        let bgClass = 'bg-[#E2E8F0] text-neutral-800'; // pastel gray
+                        if (matched.type === 'focus' || matched.type === 'smart') {
+                            bgClass = 'bg-[#FCA5A5] text-[#7F1D1D]'; // pastel coral pink
+                        } else if (matched.type === 'fixed' || matched.type === 'lab') {
+                            bgClass = 'bg-[#A5B4FC] text-[#1E1B4B]'; // pastel periwinkle blue
+                        } else if (matched.type === 'sport') {
+                            bgClass = 'bg-[#93C5FD] text-[#1E3A8A]'; // pastel sky blue
+                        } else if (matched.type === 'recovery' || matched.type === 'free' || matched.type === 'break') {
+                            bgClass = 'bg-[#FED7AA] text-[#7C2D12]'; // pastel warm peach
+                        }
+                        
+                        cellHtml = `
+                            <div onclick="openDayFromMonth('${ds}', ${dateObj.getDate()})" 
+                                 title="${matched.title} (${matched.time})" 
+                                 class="h-full w-full rounded-[9px] ${bgClass} shadow-xs cursor-pointer hover:opacity-95 active:scale-95 transition-all p-0.5 flex items-center justify-center text-center overflow-hidden">
+                                <span class="text-[7.5px] font-bold leading-tight truncate block w-full px-0.5 select-none">${matched.title}</span>
+                            </div>
+                        `;
                     }
-                    rowHtml += cellHtml + `</div>`;
+                    
+                    rowHtml += cellHtml;
                 }
                 rowHtml += `</div></div>`;
                 gridHtml += rowHtml;
             });
             calWeekGrid.innerHTML = gridHtml;
 
-            // Active Day Header
-            const activeDay = weekDays.find(d => formatDateStr(d.getFullYear(), d.getMonth(), d.getDate()) === todayStr) || weekDays[4];
-            const activeDs = formatDateStr(activeDay.getFullYear(), activeDay.getMonth(), activeDay.getDate());
-            calWeekActiveDay.textContent = activeDay.toLocaleString('default', { weekday: 'long', month: 'long', day: 'numeric' });
-            const evCount = getCalEventsForDate(activeDs).length;
-            calWeekEventCount.textContent = evCount + ' events';
-
             const startStr = weekDays[0].toLocaleString('default', { month: 'short', day: 'numeric' });
             const endStr = weekDays[6].toLocaleString('default', { month: 'short', day: 'numeric', year: 'numeric' });
             calViewTitle.textContent = `${startStr} – ${endStr}`;
+        }
+
+        function selectWeekDay(year, month, date) {
+            calYear = year;
+            calMonth = month;
+            calDate = date;
+            renderCalWeek(calYear, calMonth, calDate);
         }
 
         // Render Day View (Schedule & Timeline with sleek vertical line, nodes, and colored cards)
@@ -1565,11 +1682,11 @@
                 renderCalMonth(calYear, calMonth);
             } else if (calView === 'week') {
                 const ref = new Date(calYear, calMonth, calDate);
-                const monday = getMonday(ref);
-                monday.setDate(monday.getDate() + delta * 7);
-                calYear = monday.getFullYear();
-                calMonth = monday.getMonth();
-                calDate = monday.getDate();
+                const sunday = getSunday(ref);
+                sunday.setDate(sunday.getDate() + delta * 7);
+                calYear = sunday.getFullYear();
+                calMonth = sunday.getMonth();
+                calDate = sunday.getDate();
                 renderCalWeek(calYear, calMonth, calDate);
             } else if (calView === 'day') {
                 calDate += delta;
@@ -1598,11 +1715,6 @@
             } else if (view === 'week') {
                 calWeekView.classList.remove('view-hidden');
                 calWeekView.classList.add('view-visible');
-                const ref = new Date(calYear, calMonth, calDate);
-                const monday = getMonday(ref);
-                calYear = monday.getFullYear();
-                calMonth = monday.getMonth();
-                calDate = monday.getDate();
                 renderCalWeek(calYear, calMonth, calDate);
             } else if (view === 'day') {
                 calDayView.classList.remove('view-hidden');
@@ -1798,9 +1910,7 @@
             // Re-render Calendar view
             if (calView === 'month') renderCalMonth(calYear, calMonth);
             else if (calView === 'week') {
-                const ref = new Date(calYear, calMonth, calDate);
-                const monday = getMonday(ref);
-                renderCalWeek(calYear, calMonth, monday.getDate());
+                renderCalWeek(calYear, calMonth, calDate);
             } else if (calView === 'day') {
                 renderCalDay(calYear, calMonth, calDate);
             }
@@ -1816,21 +1926,20 @@
 
         // Initialize Calendar & Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
-            calViewBtns.forEach(btn => {
-                btn.addEventListener('click', () => setCalView(btn.dataset.view));
-            });
+            // Render the bottom dock immediately
+            renderBottomDock();
+
+            if (calViewBtns) {
+                calViewBtns.forEach(btn => {
+                    btn.addEventListener('click', () => setCalView(btn.dataset.view));
+                });
+            }
 
             if (calPrevBtn) calPrevBtn.addEventListener('click', () => calNavigate(-1));
             if (calNextBtn) calNextBtn.addEventListener('click', () => calNavigate(1));
 
-            // Default: Day view (Schedule & Timeline)
+            // Default: Day view for calendar
             setCalView('day');
-            
-            // Render the dark pill dock matching the user reference
-            renderBottomDock();
-            
-            // Set initial screen (Calendar matching the user request)
-            switchScreen('calendar');
         });
     </script>
 </body>
