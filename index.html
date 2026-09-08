@@ -169,7 +169,7 @@
             <!-- ========================================================== -->
             <!-- SCREEN 1: TODAY / HOME (Daily Tasks & Energy) -->
             <!-- ========================================================== -->
-            <div id="screen-today" class="screen-transition screen-visible h-full overflow-y-auto no-scrollbar px-4 pt-2 pb-28 flex flex-col space-y-4" data-purpose="screen-today">
+            <div id="screen-today" class="screen-transition screen-visible h-full overflow-y-auto overflow-x-hidden no-scrollbar px-3.5 pt-2 pb-32 flex flex-col space-y-4" data-purpose="screen-today">
                 
                 <!-- Header -->
                 <header class="flex items-center justify-between pt-1 px-1">
@@ -198,18 +198,18 @@
                     <div class="grid grid-cols-3 gap-2 pt-0.5">
                         <div class="bg-[#F8F8FA] rounded-[18px] p-2.5 flex flex-col items-center justify-center text-center">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-[#8E8E93]">Mental</span>
-                            <span class="text-[16px] font-black text-[#1C1C1E] mt-0.5">8.5<span class="text-[10px] font-medium text-[#8E8E93]">/10</span></span>
-                            <span class="text-[9.5px] font-bold text-[#007AFF] bg-[#007AFF]/10 px-1.5 py-0.5 rounded-md mt-1">Peak</span>
+                            <span class="text-[16px] font-black text-[#1C1C1E] mt-0.5"><span id="todayMentalVal">8.5</span><span class="text-[10px] font-medium text-[#8E8E93]">/10</span></span>
+                            <span id="todayMentalBadge" class="text-[9.5px] font-bold text-[#007AFF] bg-[#007AFF]/10 px-1.5 py-0.5 rounded-md mt-1">Peak</span>
                         </div>
                         <div class="bg-[#F8F8FA] rounded-[18px] p-2.5 flex flex-col items-center justify-center text-center">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-[#8E8E93]">Physical</span>
-                            <span class="text-[16px] font-black text-[#1C1C1E] mt-0.5">7.8<span class="text-[10px] font-medium text-[#8E8E93]">/10</span></span>
-                            <span class="text-[9.5px] font-bold text-[#34C759] bg-[#34C759]/10 px-1.5 py-0.5 rounded-md mt-1">Steady</span>
+                            <span class="text-[16px] font-black text-[#1C1C1E] mt-0.5"><span id="todayPhysicalVal">7.8</span><span class="text-[10px] font-medium text-[#8E8E93]">/10</span></span>
+                            <span id="todayPhysicalBadge" class="text-[9.5px] font-bold text-[#34C759] bg-[#34C759]/10 px-1.5 py-0.5 rounded-md mt-1">Steady</span>
                         </div>
                         <div class="bg-[#F8F8FA] rounded-[18px] p-2.5 flex flex-col items-center justify-center text-center">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-[#8E8E93]">Social</span>
-                            <span class="text-[16px] font-black text-[#1C1C1E] mt-0.5">6.0<span class="text-[10px] font-medium text-[#8E8E93]">/10</span></span>
-                            <span class="text-[9.5px] font-bold text-[#FF9500] bg-[#FF9500]/10 px-1.5 py-0.5 rounded-md mt-1">Rest</span>
+                            <span class="text-[16px] font-black text-[#1C1C1E] mt-0.5"><span id="todaySocialVal">6.0</span><span class="text-[10px] font-medium text-[#8E8E93]">/10</span></span>
+                            <span id="todaySocialBadge" class="text-[9.5px] font-bold text-[#FF9500] bg-[#FF9500]/10 px-1.5 py-0.5 rounded-md mt-1">Rest</span>
                         </div>
                     </div>
                     <div class="pt-1">
@@ -223,21 +223,27 @@
                     </div>
                 </section>
                 
-                <!-- Optimal Focus Banner -->
-                <section class="bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] text-white rounded-[26px] p-3.5 shadow-md flex items-center justify-between">
+                <!-- Optimal Focus Banner (Clickable -> Opens Capacity Check-In) -->
+                <section onclick="openCapacityCheckinModal()" class="bg-gradient-to-br from-[#1C1C1E] to-[#2C2C2E] text-white rounded-[26px] p-3.5 shadow-md flex items-center justify-between cursor-pointer hover:scale-[1.01] active:scale-95 transition-all group" title="Tap to calibrate capacity">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 border border-white/15 text-[#FFD60A]">
+                        <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center shrink-0 border border-white/15 text-[#FFD60A] group-hover:bg-white/20 transition-colors">
                             <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20">
                                 <path d="M11.3 1.05a1 1 0 00-1 .04L3.6 5.57a1 1 0 00-.47.85v4.58c0 .35.19.68.5.85l3.37 1.93-1.6 4.79a1 1 0 001.57 1.13l9.4-7.23a1 1 0 00.18-1.39l-4.52-4.52.87-4.14a1 1 0 00-.6-1.13z"/>
                             </svg>
                         </div>
                         <div>
-                            <span class="text-[9.5px] font-extrabold uppercase tracking-widest text-[#85E0A3] block">Next Up · Optimal Window</span>
-                            <h4 class="text-[13px] font-bold tracking-tight text-white leading-tight">Thermodynamics Midterm Prep</h4>
-                            <p class="text-[11px] text-zinc-400 mt-0.5">Hall 104 · Dr. Aris</p>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="text-[9.5px] font-extrabold uppercase tracking-widest text-[#85E0A3] block">Next Up · Optimal Window</span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            </div>
+                            <h4 class="text-[13px] font-bold tracking-tight text-white leading-tight mt-0.5">Thermodynamics Midterm Prep</h4>
+                            <p class="text-[11px] text-zinc-400 mt-0.5 flex items-center space-x-1">
+                                <span>Hall 104 · Dr. Aris</span>
+                                <span class="text-[10px] text-emerald-400/80 font-medium">· Tap to check-in ➔</span>
+                            </p>
                         </div>
                     </div>
-                    <span class="text-[11px] font-bold px-3 py-1.5 rounded-full bg-white text-black shrink-0 tracking-tight ml-2">11:00 AM</span>
+                    <span class="text-[11px] font-bold px-3 py-1.5 rounded-full bg-white text-black shrink-0 tracking-tight ml-2 group-hover:bg-amber-300 transition-colors">11:00 AM</span>
                 </section>
                 
                 <!-- Daily Tasks Schedule Section -->
@@ -253,58 +259,85 @@
                     </div>
                     
                     <div id="todayScheduleList" class="space-y-2.5">
-                        <article class="bg-white rounded-[24px] p-3.5 flex items-center justify-between shadow-soft border border-black/[0.02] group cursor-pointer" onclick="toggleTaskComplete(this)">
-                            <div class="flex items-center space-x-3">
-                                <div class="task-check-circle w-6 h-6 rounded-full border-2 border-neutral-300 group-hover:border-blue-500 flex items-center justify-center shrink-0 transition-colors">
-                                    <span class="material-symbols-outlined text-[14px] text-white opacity-0 transition-opacity">check</span>
+                        <article class="bg-white rounded-[24px] p-3.5 flex flex-col shadow-soft border border-black/[0.02] group cursor-pointer" onclick="toggleTaskComplete(this)">
+                            <div class="flex items-center justify-between w-full">
+                                <div class="flex items-center space-x-3">
+                                    <div class="task-check-circle w-6 h-6 rounded-full border-2 border-neutral-300 group-hover:border-blue-500 flex items-center justify-center shrink-0 transition-colors">
+                                        <span class="material-symbols-outlined text-[14px] text-white opacity-0 transition-opacity">check</span>
+                                    </div>
+                                    <div class="w-10 h-10 rounded-2xl bg-[#E8F0FE] flex items-center justify-center shrink-0">
+                                        <svg class="w-5 h-5 text-[#1A73E8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="task-title text-[14px] font-bold text-[#1C1C1E] tracking-tight leading-tight transition-all">Physics Lecture</h3>
+                                        <p class="text-[11px] font-medium text-[#8E8E93] mt-0.5">Hall 104 · Dr. Aris</p>
+                                    </div>
                                 </div>
-                                <div class="w-10 h-10 rounded-2xl bg-[#E8F0FE] flex items-center justify-center shrink-0">
-                                    <svg class="w-5 h-5 text-[#1A73E8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 class="task-title text-[14px] font-bold text-[#1C1C1E] tracking-tight leading-tight transition-all">Physics Lecture</h3>
-                                    <p class="text-[11px] font-medium text-[#8E8E93] mt-0.5">Hall 104 · Dr. Aris</p>
-                                </div>
+                                <span class="bg-[#1C1C1E] text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full tracking-tight">11:00 AM</span>
                             </div>
-                            <span class="bg-[#1C1C1E] text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full tracking-tight">11:00 AM</span>
+                            <div class="task-reflection-container mt-2.5 pt-2 border-t border-neutral-100/90 flex items-start justify-between space-x-2 text-[11px] hidden">
+                                <div class="flex items-start space-x-1.5 flex-1 min-w-0">
+                                    <span class="text-xs shrink-0">💭</span>
+                                    <p class="task-reflection-text italic text-neutral-600 truncate text-[11px]"></p>
+                                </div>
+                                <button type="button" onclick="event.stopPropagation(); openReflectionForElement(this.closest('article'))" class="text-[10px] font-bold text-blue-600 hover:text-blue-700 hover:underline shrink-0">Edit</button>
+                            </div>
                         </article>
                         
-                        <article class="bg-white rounded-[24px] p-3.5 flex items-center justify-between shadow-soft border border-black/[0.02] group cursor-pointer" onclick="toggleTaskComplete(this)">
-                            <div class="flex items-center space-x-3">
-                                <div class="task-check-circle w-6 h-6 rounded-full border-2 border-neutral-300 group-hover:border-blue-500 flex items-center justify-center shrink-0 transition-colors">
-                                    <span class="material-symbols-outlined text-[14px] text-white opacity-0 transition-opacity">check</span>
+                        <article class="bg-white rounded-[24px] p-3.5 flex flex-col shadow-soft border border-black/[0.02] group cursor-pointer" onclick="toggleTaskComplete(this)">
+                            <div class="flex items-center justify-between w-full">
+                                <div class="flex items-center space-x-3">
+                                    <div class="task-check-circle w-6 h-6 rounded-full border-2 border-neutral-300 group-hover:border-blue-500 flex items-center justify-center shrink-0 transition-colors">
+                                        <span class="material-symbols-outlined text-[14px] text-white opacity-0 transition-opacity">check</span>
+                                    </div>
+                                    <div class="w-10 h-10 rounded-2xl bg-[#EBF9F1] flex items-center justify-center shrink-0">
+                                        <svg class="w-5 h-5 text-[#34C759]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="task-title text-[14px] font-bold text-[#1C1C1E] tracking-tight leading-tight transition-all">Deep Study: Quantum</h3>
+                                        <p class="text-[11px] font-medium text-[#8E8E93] mt-0.5">Library Quiet Wing · Floor 3</p>
+                                    </div>
                                 </div>
-                                <div class="w-10 h-10 rounded-2xl bg-[#EBF9F1] flex items-center justify-center shrink-0">
-                                    <svg class="w-5 h-5 text-[#34C759]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 class="task-title text-[14px] font-bold text-[#1C1C1E] tracking-tight leading-tight transition-all">Deep Study: Quantum</h3>
-                                    <p class="text-[11px] font-medium text-[#8E8E93] mt-0.5">Library Quiet Wing · Floor 3</p>
-                                </div>
+                                <span class="bg-[#1C1C1E] text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full tracking-tight">2:00 PM</span>
                             </div>
-                            <span class="bg-[#1C1C1E] text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full tracking-tight">2:00 PM</span>
+                            <div class="task-reflection-container mt-2.5 pt-2 border-t border-neutral-100/90 flex items-start justify-between space-x-2 text-[11px] hidden">
+                                <div class="flex items-start space-x-1.5 flex-1 min-w-0">
+                                    <span class="text-xs shrink-0">💭</span>
+                                    <p class="task-reflection-text italic text-neutral-600 truncate text-[11px]"></p>
+                                </div>
+                                <button type="button" onclick="event.stopPropagation(); openReflectionForElement(this.closest('article'))" class="text-[10px] font-bold text-blue-600 hover:text-blue-700 hover:underline shrink-0">Edit</button>
+                            </div>
                         </article>
                         
-                        <article class="bg-white rounded-[24px] p-3.5 flex items-center justify-between shadow-soft border border-black/[0.02] group cursor-pointer" onclick="toggleTaskComplete(this)">
-                            <div class="flex items-center space-x-3">
-                                <div class="task-check-circle w-6 h-6 rounded-full border-2 border-neutral-300 group-hover:border-blue-500 flex items-center justify-center shrink-0 transition-colors">
-                                    <span class="material-symbols-outlined text-[14px] text-white opacity-0 transition-opacity">check</span>
+                        <article class="bg-white rounded-[24px] p-3.5 flex flex-col shadow-soft border border-black/[0.02] group cursor-pointer" onclick="toggleTaskComplete(this)">
+                            <div class="flex items-center justify-between w-full">
+                                <div class="flex items-center space-x-3">
+                                    <div class="task-check-circle w-6 h-6 rounded-full border-2 border-neutral-300 group-hover:border-blue-500 flex items-center justify-center shrink-0 transition-colors">
+                                        <span class="material-symbols-outlined text-[14px] text-white opacity-0 transition-opacity">check</span>
+                                    </div>
+                                    <div class="w-10 h-10 rounded-2xl bg-[#FFF4E5] flex items-center justify-center shrink-0">
+                                        <svg class="w-5 h-5 text-[#FF9500]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="task-title text-[14px] font-bold text-[#1C1C1E] tracking-tight leading-tight transition-all">Badminton Training</h3>
+                                        <p class="text-[11px] font-medium text-[#8E8E93] mt-0.5">Sports Complex · Court 4</p>
+                                    </div>
                                 </div>
-                                <div class="w-10 h-10 rounded-2xl bg-[#FFF4E5] flex items-center justify-center shrink-0">
-                                    <svg class="w-5 h-5 text-[#FF9500]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 class="task-title text-[14px] font-bold text-[#1C1C1E] tracking-tight leading-tight transition-all">Badminton Training</h3>
-                                    <p class="text-[11px] font-medium text-[#8E8E93] mt-0.5">Sports Complex · Court 4</p>
-                                </div>
+                                <span class="bg-[#1C1C1E] text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full tracking-tight">5:00 PM</span>
                             </div>
-                            <span class="bg-[#1C1C1E] text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full tracking-tight">5:00 PM</span>
+                            <div class="task-reflection-container mt-2.5 pt-2 border-t border-neutral-100/90 flex items-start justify-between space-x-2 text-[11px] hidden">
+                                <div class="flex items-start space-x-1.5 flex-1 min-w-0">
+                                    <span class="text-xs shrink-0">💭</span>
+                                    <p class="task-reflection-text italic text-neutral-600 truncate text-[11px]"></p>
+                                </div>
+                                <button type="button" onclick="event.stopPropagation(); openReflectionForElement(this.closest('article'))" class="text-[10px] font-bold text-blue-600 hover:text-blue-700 hover:underline shrink-0">Edit</button>
+                            </div>
                         </article>
                     </div>
                 </section>
@@ -314,7 +347,7 @@
             <!-- ========================================================== -->
             <!-- SCREEN 2: CALENDAR (with Month/Week/Day toggle) -->
             <!-- ========================================================== -->
-            <div id="screen-calendar" class="screen-transition screen-hidden h-full overflow-y-auto no-scrollbar px-4 pt-2 pb-28 flex flex-col space-y-4" data-purpose="screen-calendar">
+            <div id="screen-calendar" class="screen-transition screen-hidden h-full overflow-y-auto overflow-x-hidden no-scrollbar px-3 pt-2 pb-32 flex flex-col space-y-3.5" data-purpose="screen-calendar">
                 
                 <!-- Header -->
                 <!-- Top Bar: Bolt Icon + Calendar Title & 86% Ready Badge + Avatar -->
@@ -361,11 +394,11 @@
                 </div>
 
                 <!-- Calendar Views Container -->
-                <div class="relative w-full">
+                <div class="relative w-full min-w-0">
                     
                     <!-- DAY VIEW (Primary Schedule & Timeline) -->
-                    <div id="calDayView" class="view-transition view-visible w-full">
-                        <div id="calDayTimeline" class="relative pl-0.5 pr-0.5 space-y-3.5 pb-2">
+                    <div id="calDayView" class="view-transition view-visible w-full min-w-0">
+                        <div id="calDayTimeline" class="relative w-full min-w-0 space-y-3 pb-4">
                             <!-- Populated dynamically via renderCalDay -->
                         </div>
                     </div>
@@ -435,7 +468,7 @@
             <!-- ========================================================== -->
             <!-- SCREEN 3: RHYTHM (Circadian Energy / Insights) -->
             <!-- ========================================================== -->
-            <div id="screen-rhythm" class="screen-transition screen-hidden h-full overflow-y-auto no-scrollbar px-4 pt-2 pb-28 flex flex-col space-y-4" data-purpose="screen-rhythm">
+            <div id="screen-rhythm" class="screen-transition screen-hidden h-full overflow-y-auto overflow-x-hidden no-scrollbar px-3.5 pt-2 pb-32 flex flex-col space-y-4" data-purpose="screen-rhythm">
                 
                 <!-- Header -->
                 <header class="flex items-center justify-between pt-1 px-1">
@@ -570,11 +603,11 @@
                         <span class="text-[10px] font-bold text-neutral-400">Done</span>
                     </article>
                     
-                    <article class="bg-[#18191d] text-white rounded-[24px] p-3.5 shadow-lg relative overflow-hidden">
+                    <article onclick="openCapacityCheckinModal()" class="bg-[#18191d] text-white rounded-[24px] p-3.5 shadow-lg relative overflow-hidden cursor-pointer hover:scale-[1.01] active:scale-95 transition-all group" title="Tap to calibrate capacity">
                         <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-indigo-500/20 blur-xl pointer-events-none"></div>
                         <div class="relative flex items-center justify-between">
                             <div class="flex items-start space-x-3">
-                                <div class="w-10 h-10 rounded-2xl bg-neutral-800 border border-neutral-700/80 flex items-center justify-center shrink-0 text-amber-400 shadow-inner">
+                                <div class="w-10 h-10 rounded-2xl bg-neutral-800 border border-neutral-700/80 flex items-center justify-center shrink-0 text-amber-400 shadow-inner group-hover:bg-neutral-700 transition-colors">
                                     <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
                                         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                                     </svg>
@@ -585,7 +618,7 @@
                                     <p class="text-[10.5px] text-neutral-400 mt-0.5">Hall 104 · Dr. Aris</p>
                                 </div>
                             </div>
-                            <div class="shrink-0 bg-white text-neutral-900 font-bold text-[11px] px-2.5 py-1.5 rounded-full shadow">11:00 AM</div>
+                            <div class="shrink-0 bg-white text-neutral-900 font-bold text-[11px] px-2.5 py-1.5 rounded-full shadow group-hover:bg-amber-300 transition-colors">11:00 AM</div>
                         </div>
                     </article>
                     
@@ -612,7 +645,7 @@
             <!-- ========================================================== -->
             <!-- SCREEN 4: PROFILE / TRENDS -->
             <!-- ========================================================== -->
-            <div id="screen-profile" class="screen-transition screen-hidden h-full overflow-y-auto no-scrollbar px-4 pt-2 pb-28 flex flex-col space-y-4" data-purpose="screen-profile">
+            <div id="screen-profile" class="screen-transition screen-hidden h-full overflow-y-auto overflow-x-hidden no-scrollbar px-3.5 pt-2 pb-32 flex flex-col space-y-4" data-purpose="screen-profile">
                 
                 <!-- Header -->
                 <header class="flex items-center justify-between pt-1 px-1">
@@ -813,17 +846,23 @@
                         <input type="hidden" id="selectedEventType" value="focus"/>
                     </div>
                     
-                    <!-- Date & Time Inputs -->
+                    <!-- Date Input -->
+                    <div>
+                        <label class="block text-[10.5px] font-bold text-white/40 uppercase tracking-wider mb-1">Date</label>
+                        <select id="eventDateSelect" class="w-full bg-[#2C2C2E] border border-white/10 rounded-xl px-3.5 py-2 text-[12px] font-medium text-white focus:outline-none focus:ring-2 focus:ring-white/30">
+                            <option value="2026-05-16">Today (May 16)</option>
+                            <option value="2026-05-17">Tomorrow (May 17)</option>
+                            <option value="2026-05-18">Monday (May 18)</option>
+                            <option value="2026-05-19">Tuesday (May 19)</option>
+                            <option value="2026-05-20">Wednesday (May 20)</option>
+                            <option value="2026-05-21">Thursday (May 21)</option>
+                            <option value="2026-05-22">Friday (May 22)</option>
+                            <option value="2026-05-23">Saturday (May 23)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Start Time & End Time Inputs -->
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-[10.5px] font-bold text-white/40 uppercase tracking-wider mb-1">Date</label>
-                            <select id="eventDateSelect" class="w-full bg-[#2C2C2E] border border-white/10 rounded-xl px-2.5 py-2 text-[12px] font-medium text-white focus:outline-none focus:ring-2 focus:ring-white/30">
-                                <option value="2026-05-16">Today (May 16)</option>
-                                <option value="2026-05-17">Tomorrow (May 17)</option>
-                                <option value="2026-05-18">Monday (May 18)</option>
-                                <option value="2026-05-19">Tuesday (May 19)</option>
-                            </select>
-                        </div>
                         <div>
                             <label class="block text-[10.5px] font-bold text-white/40 uppercase tracking-wider mb-1">Start Time</label>
                             <select id="eventTimeSelect" class="w-full bg-[#2C2C2E] border border-white/10 rounded-xl px-2.5 py-2 text-[12px] font-medium text-white focus:outline-none focus:ring-2 focus:ring-white/30">
@@ -839,6 +878,25 @@
                                 <option value="05:00 PM">05:00 PM</option>
                                 <option value="06:00 PM">06:00 PM</option>
                                 <option value="07:00 PM">07:00 PM</option>
+                                <option value="08:00 PM">08:00 PM</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10.5px] font-bold text-white/40 uppercase tracking-wider mb-1">End Time</label>
+                            <select id="eventEndTimeSelect" class="w-full bg-[#2C2C2E] border border-white/10 rounded-xl px-2.5 py-2 text-[12px] font-medium text-white focus:outline-none focus:ring-2 focus:ring-white/30">
+                                <option value="09:00 AM">09:00 AM</option>
+                                <option value="10:00 AM">10:00 AM</option>
+                                <option value="11:00 AM">11:00 AM</option>
+                                <option value="12:00 PM" selected>12:00 PM</option>
+                                <option value="01:00 PM">01:00 PM</option>
+                                <option value="02:00 PM">02:00 PM</option>
+                                <option value="03:00 PM">03:00 PM</option>
+                                <option value="04:00 PM">04:00 PM</option>
+                                <option value="05:00 PM">05:00 PM</option>
+                                <option value="06:00 PM">06:00 PM</option>
+                                <option value="07:00 PM">07:00 PM</option>
+                                <option value="08:00 PM">08:00 PM</option>
+                                <option value="09:00 PM">09:00 PM</option>
                             </select>
                         </div>
                     </div>
@@ -849,12 +907,7 @@
                         <input type="text" id="eventLocationInput" placeholder="e.g., Library Quiet Zone, Hall 104, Zoom..." class="w-full bg-[#2C2C2E] border border-white/10 rounded-xl px-3.5 py-2 text-[12px] font-medium text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-white/30"/>
                     </div>
                     
-                    <!-- Bio-Sync Callout -->
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-2.5 flex items-center space-x-2">
-                        <span class="text-white font-extrabold text-[14px]">⚡</span>
-                        <span class="text-[11px] font-medium text-white/60 leading-tight">Auto-aligned to your <strong class="text-white/80">Circadian Peak (92%)</strong> for optimal memory retention and cognitive focus.</span>
-                    </div>
-                    
+
                     <!-- Submit Button -->
                     <button type="submit" class="w-full bg-white hover:bg-white/90 text-[#1C1C1E] font-bold py-3 px-4 rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.3)] flex items-center justify-center space-x-2 active:scale-95 transition-all cursor-pointer">
                         <span class="material-symbols-outlined text-[19px]">add_task</span>
@@ -864,6 +917,273 @@
             </div>
         </div>
         <!-- END: Add Event Modal -->
+
+        <!-- ========================================================== -->
+        <!-- Post-Event Reflection Modal -->
+        <!-- ========================================================== -->
+        <div id="reflectionModal" class="absolute inset-0 z-50 pointer-events-none opacity-0 transition-opacity duration-300 flex flex-col justify-end">
+            <!-- Backdrop -->
+            <div id="reflectionBackdrop" onclick="closeReflectionModal()" class="absolute inset-0 bg-black/50 backdrop-blur-[2px] transition-opacity cursor-pointer"></div>
+            
+            <!-- Sheet Content -->
+            <div id="reflectionSheet" class="relative bg-white rounded-t-[32px] p-5 pt-3 pb-8 shadow-2xl border-t border-neutral-100 transform translate-y-full transition-transform duration-300 ease-out z-10 flex flex-col max-h-[85%] overflow-y-auto no-scrollbar">
+                <!-- Grab handle bar -->
+                <div class="w-10 h-1 bg-neutral-200 rounded-full mx-auto mb-3 cursor-pointer" onclick="closeReflectionModal()"></div>
+                
+                <!-- Sheet Header -->
+                <div class="flex items-center justify-between pb-3 border-b border-neutral-100 shrink-0">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-inner border border-emerald-100">
+                            ✨
+                        </div>
+                        <div>
+                            <h3 class="text-[17px] font-bold text-[#1C1C1E] tracking-tight">Event Reflection</h3>
+                            <p id="reflectionEventSubtitle" class="text-[11.5px] font-medium text-neutral-400 truncate max-w-[220px]">Event Finished · How did it go?</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="closeReflectionModal()" class="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-600 flex items-center justify-center transition active:scale-95 cursor-pointer">
+                        <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                </div>
+                
+                <!-- Reflection Form Body -->
+                <form id="reflectionForm" onsubmit="handleSaveReflection(event)" class="space-y-3.5 mt-3.5">
+                    <!-- Quick Tags -->
+                    <div>
+                        <label class="block text-[10.5px] font-bold text-neutral-400 uppercase tracking-wider mb-1.5">Quick Tags</label>
+                        <div class="flex flex-wrap gap-1.5">
+                            <button type="button" onclick="appendReflectionTag('🎯 High Focus')" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition active:scale-95 cursor-pointer">🎯 High Focus</button>
+                            <button type="button" onclick="appendReflectionTag('⚡ Energized')" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition active:scale-95 cursor-pointer">⚡ Energized</button>
+                            <button type="button" onclick="appendReflectionTag('🧠 Productive')" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition active:scale-95 cursor-pointer">🧠 Productive</button>
+                            <button type="button" onclick="appendReflectionTag('😴 Needed Rest')" class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition active:scale-95 cursor-pointer">😴 Needed Rest</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Reflection Textbox -->
+                    <div>
+                        <label class="block text-[10.5px] font-bold text-neutral-400 uppercase tracking-wider mb-1">Post-Event Reflection &amp; Takeaways</label>
+                        <textarea id="reflectionTextarea" rows="4" placeholder="Write down your thoughts, takeaways, mood, or what you learned during this session..." class="w-full bg-[#F5F5F7] border border-neutral-200/80 rounded-2xl p-3.5 text-[12.5px] font-medium text-[#1C1C1E] placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-neutral-400 resize-none transition-all"></textarea>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex items-center space-x-2 pt-1">
+                        <button type="button" onclick="closeReflectionModal()" class="flex-1 py-3 px-4 rounded-xl border border-neutral-200 text-neutral-600 font-bold text-[12.5px] hover:bg-neutral-50 active:scale-95 transition cursor-pointer text-center">
+                            Skip for now
+                        </button>
+                        <button type="submit" class="flex-1 bg-[#1C1C1E] hover:bg-black text-white font-bold py-3 px-4 rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.15)] flex items-center justify-center space-x-1.5 active:scale-95 transition-all cursor-pointer">
+                            <span class="material-symbols-outlined text-[17px]">check</span>
+                            <span class="text-[12.5px]">Save Reflection</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- END: Post-Event Reflection Modal -->
+
+        <!-- ========================================================== -->
+        <!-- Event Capacity Check-In Modal / Calibration Screen -->
+        <!-- ========================================================== -->
+        <div id="capacityCheckinModal" class="absolute inset-0 z-50 bg-[#F3F4F6] pointer-events-none opacity-0 translate-y-full transition-all duration-300 flex flex-col justify-between overflow-hidden" data-purpose="capacity-checkin-screen">
+            
+            <!-- Top Status Bar for the Check-In Modal -->
+            <header class="w-full pt-3 px-6 flex justify-between items-center z-30 shrink-0 select-none">
+                <!-- Time -->
+                <span class="text-[13px] font-bold tracking-tight text-neutral-900 ml-1">19:41</span>
+                <!-- Dynamic Island Pill -->
+                <div class="w-[96px] h-[26px] bg-black rounded-island absolute left-1/2 -translate-x-1/2 top-2.5 flex items-center justify-end px-2.5" data-purpose="dynamic-island">
+                    <div class="w-2.5 h-2.5 rounded-full bg-[#111] border border-neutral-800"></div>
+                </div>
+                <!-- System Icons: Cellular, Wi-Fi, Battery -->
+                <div class="flex items-center space-x-1.5 text-neutral-900 mr-1">
+                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.35 19.68 10.63 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" opacity="0"></path>
+                        <rect height="5" rx="1" width="3" x="2" y="16"></rect>
+                        <rect height="8" rx="1" width="3" x="7" y="13"></rect>
+                        <rect height="12" rx="1" width="3" x="12" y="9"></rect>
+                        <rect height="17" rx="1" width="3" x="17" y="4"></rect>
+                    </svg>
+                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98C20.93 5.9 16.69 4 12 4zm0 3.5c3.5 0 6.69 1.4 9.02 3.68L12 18.25 2.98 11.18C5.31 8.9 8.5 7.5 12 7.5z"></path>
+                    </svg>
+                    <div class="w-[20px] h-[10px] rounded-[3px] border-[1.5px] border-neutral-900 flex items-center p-0.5">
+                        <div class="h-full w-full bg-neutral-900 rounded-[1px]"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content Container -->
+            <div class="flex-1 overflow-y-auto px-4 pt-2.5 pb-28 space-y-3.5 no-scrollbar" data-purpose="modal-content-flow">
+                <!-- Top Modal Navigation -->
+                <section class="flex items-center justify-between px-1" data-purpose="modal-navigation-bar">
+                    <!-- Close Button -->
+                    <button aria-label="Close check-in" onclick="closeCapacityCheckinModal()" class="w-9 h-9 rounded-full bg-white shadow-sm border border-neutral-200/60 flex items-center justify-center text-neutral-600 hover:text-black transition-colors active:scale-95 cursor-pointer" type="button">
+                        <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    <div class="text-center">
+                        <span class="text-[11px] font-semibold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Live Calibration</span>
+                        <h1 class="text-[17px] font-extrabold text-neutral-900 leading-tight mt-0.5">Capacity Check-In</h1>
+                    </div>
+                    <!-- Event Phase Pill -->
+                    <div class="text-[11px] font-bold text-neutral-600 bg-neutral-200/80 px-2.5 py-1 rounded-full">
+                        11:00 AM
+                    </div>
+                </section>
+
+                <!-- Event Context Card -->
+                <article class="bg-gradient-to-br from-[#1F1F22] to-[#121214] text-white p-4 rounded-card shadow-soft relative overflow-hidden" data-purpose="event-overview-banner">
+                    <!-- Ambient decorative glow -->
+                    <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/10 rounded-full blur-xl pointer-events-none"></div>
+                    <div class="flex items-start justify-between">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Target Event</span>
+                            <h2 class="text-[15px] font-bold leading-snug tracking-tight">Thermodynamics Midterm Prep</h2>
+                            <p class="text-[11px] text-neutral-300 flex items-center gap-1.5">
+                                <span>Hall 104 · Dr. Aris</span>
+                                <span class="inline-block w-1 h-1 rounded-full bg-neutral-400"></span>
+                                <span>11:00 AM – 12:30 PM</span>
+                            </p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-amber-400/20 text-amber-300 flex items-center justify-center shrink-0 ml-2">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2.5 border-t border-white/10 text-[10.5px] text-neutral-400 leading-normal">
+                        Rate your bio-cognitive reserve to re-balance afternoon recovery windows and focus depth.
+                    </div>
+                </article>
+
+                <!-- Capacity Rating Form -->
+                <form class="space-y-2.5" data-purpose="bio-rhythm-calibrators" onsubmit="event.preventDefault(); handleSaveCapacityCheckin();">
+                    <!-- 1. Mental Capacity Slider Card -->
+                    <div class="bg-white p-3.5 rounded-card shadow-soft border border-neutral-100/80">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-7 h-7 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z"></path>
+                                        <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z"></path>
+                                    </svg>
+                                </div>
+                                <label class="text-[13px] font-bold text-neutral-800" for="mental-slider">Mental Focus</label>
+                            </div>
+                            <span id="mental-val-badge" class="text-[11px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-100">
+                                8.0 <span class="text-[9px] font-medium text-indigo-500">/ 10 · High</span>
+                            </span>
+                        </div>
+                        <!-- Custom Segmented Slider Representation -->
+                        <div class="relative py-1">
+                            <input oninput="updateCheckinSlider('mental', this.value)" class="w-full h-2 bg-neutral-100 rounded-lg appearance-none cursor-pointer accent-indigo-600 focus:outline-none" id="mental-slider" max="10" min="1" step="0.5" type="range" value="8">
+                            <div class="flex justify-between text-[9px] text-neutral-600 font-medium px-0.5 mt-1">
+                                <span>Foggy</span>
+                                <span>Baseline</span>
+                                <span class="font-bold text-indigo-600">Peak Flow</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Physical Vitality Slider Card -->
+                    <div class="bg-white p-3.5 rounded-card shadow-soft border border-neutral-100/80">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-7 h-7 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                                    </svg>
+                                </div>
+                                <label class="text-[13px] font-bold text-neutral-800" for="physical-slider">Physical Vitality</label>
+                            </div>
+                            <span id="physical-val-badge" class="text-[11px] font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-100">
+                                7.5 <span class="text-[9px] font-medium text-emerald-500">/ 10 · Steady</span>
+                            </span>
+                        </div>
+                        <!-- Custom Segmented Slider Representation -->
+                        <div class="relative py-1">
+                            <input oninput="updateCheckinSlider('physical', this.value)" class="w-full h-2 bg-neutral-100 rounded-lg appearance-none cursor-pointer accent-emerald-500" id="physical-slider" max="10" min="1" step="0.5" type="range" value="7.5">
+                            <div class="flex justify-between text-[9px] text-neutral-600 font-medium px-0.5 mt-1">
+                                <span>Drained</span>
+                                <span class="font-bold text-emerald-600">Steady</span>
+                                <span>Energized</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Social Battery Slider Card -->
+                    <div class="bg-white p-3.5 rounded-card shadow-soft border border-neutral-100/80">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-7 h-7 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                </div>
+                                <label class="text-[13px] font-bold text-neutral-800" for="social-slider">Social Battery</label>
+                            </div>
+                            <span id="social-val-badge" class="text-[11px] font-bold bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full border border-amber-100">
+                                5.0 <span class="text-[9px] font-medium text-amber-500">/ 10 · Reserved</span>
+                            </span>
+                        </div>
+                        <!-- Custom Segmented Slider Representation -->
+                        <div class="relative py-1">
+                            <input oninput="updateCheckinSlider('social', this.value)" class="w-full h-2 bg-neutral-100 rounded-lg appearance-none cursor-pointer accent-amber-500" id="social-slider" max="10" min="1" step="0.5" type="range" value="5">
+                            <div class="flex justify-between text-[9px] text-neutral-600 font-medium px-0.5 mt-1">
+                                <span>Solo only</span>
+                                <span class="font-bold text-amber-600">Moderate</span>
+                                <span>Collaborative</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Bio-Context Tags -->
+                    <section class="pt-1" data-purpose="quick-context-tags">
+                        <div class="text-[11px] font-bold text-neutral-600 uppercase tracking-wider mb-2 px-1">Current State Factors</div>
+                        <div class="flex flex-wrap gap-1.5">
+                            <button type="button" onclick="toggleContextTag(this)" class="context-tag px-3 py-1.5 rounded-pill bg-white text-[11px] font-semibold text-neutral-800 shadow-sm border border-neutral-200/70 hover:border-black flex items-center space-x-1 active:scale-95 transition-all cursor-pointer">
+                                <span>☕</span>
+                                <span>Caffeinated</span>
+                            </button>
+                            <button type="button" onclick="toggleContextTag(this)" class="context-tag px-3 py-1.5 rounded-pill bg-neutral-900 text-[11px] font-semibold text-white shadow-sm border border-neutral-900 flex items-center space-x-1 active:scale-95 transition-all cursor-pointer">
+                                <span>⚡</span>
+                                <span>Well Rested</span>
+                            </button>
+                            <button type="button" onclick="toggleContextTag(this)" class="context-tag px-3 py-1.5 rounded-pill bg-white text-[11px] font-semibold text-neutral-800 shadow-sm border border-neutral-200/70 hover:border-black flex items-center space-x-1 active:scale-95 transition-all cursor-pointer">
+                                <span>🥗</span>
+                                <span>Post-Meal</span>
+                            </button>
+                            <button type="button" onclick="toggleContextTag(this)" class="context-tag px-3 py-1.5 rounded-pill bg-white text-[11px] font-semibold text-neutral-800 shadow-sm border border-neutral-200/70 hover:border-black flex items-center space-x-1 active:scale-95 transition-all cursor-pointer">
+                                <span>🎧</span>
+                                <span>ANC On</span>
+                            </button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+
+            <!-- Sticky Bottom CTA -->
+            <footer class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#F3F4F6] via-[#F3F4F6]/95 to-transparent pt-4 pb-6 px-4 z-20" data-purpose="bottom-submission-dock">
+                <button onclick="handleSaveCapacityCheckin()" class="w-full bg-[#1C1C1E] active:bg-neutral-800 text-white rounded-pill py-3 px-4 shadow-float flex items-center justify-between group transition-all cursor-pointer" type="button">
+                    <div class="text-left pl-1">
+                        <div class="text-[13px] font-bold tracking-tight">Save &amp; Recalibrate Rhythm</div>
+                        <div class="text-[10px] text-neutral-400 font-normal">Auto-adjusts 4 afternoon study blocks</div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </button>
+                <!-- iOS Home Indicator -->
+                <div class="w-32 h-1 bg-black/80 rounded-full mx-auto mt-3.5"></div>
+            </footer>
+        </div>
+        <!-- END: Event Capacity Check-In Modal -->
 
     </div>
     <!-- END: Phone Device Frame -->
@@ -974,6 +1294,8 @@
                 checkCircle.classList.remove('bg-emerald-500', 'border-emerald-500');
                 checkCircle.classList.add('border-neutral-300');
                 if (checkIcon) checkIcon.classList.add('opacity-0');
+                const reflectionBox = el.querySelector('.task-reflection-container');
+                if (reflectionBox) reflectionBox.classList.add('hidden');
                 showAppToast('Task marked as incomplete');
             } else {
                 title.classList.add('task-completed');
@@ -981,6 +1303,13 @@
                 checkCircle.classList.remove('border-neutral-300');
                 if (checkIcon) checkIcon.classList.remove('opacity-0');
                 showAppToast('✓ Focus task completed!');
+                
+                // Prompt user to write reflection when event ends
+                setTimeout(() => {
+                    if (typeof openReflectionForElement === 'function') {
+                        openReflectionForElement(el);
+                    }
+                }, 350);
             }
         }
         
@@ -1607,63 +1936,74 @@
                     }
 
                     html += `
-                        <div class="relative flex items-start space-x-3 group">
+                        <div class="relative flex items-start space-x-2 group w-full min-w-0">
                             <!-- Left Column: Time -->
-                            <div class="w-[52px] pt-1 text-right shrink-0">
-                                <span class="text-[12.5px] font-extrabold text-[#161617] tracking-tight block leading-tight">${timeHour}</span>
-                                <span class="text-[9px] font-bold text-neutral-400 uppercase tracking-wider">${timeAmPm}</span>
+                            <div class="w-[42px] pt-1 text-right shrink-0">
+                                <span class="text-[12px] font-extrabold text-[#161617] tracking-tight block leading-tight">${timeHour}</span>
+                                <span class="text-[8.5px] font-bold text-neutral-400 uppercase tracking-wider">${timeAmPm}</span>
                             </div>
 
                             <!-- Center Timeline Line & Node -->
-                            <div class="relative flex flex-col items-center self-stretch shrink-0">
+                            <div class="relative flex flex-col items-center self-stretch shrink-0 w-3">
                                 ${!isLast ? '<div class="w-[2px] bg-[#E2E8F0] absolute top-4 -bottom-4 left-1/2 -translate-x-1/2"></div>' : ''}
-                                <div class="w-3.5 h-3.5 rounded-full ${nodeClass} z-10 shrink-0 mt-1"></div>
+                                <div class="w-3 h-3 rounded-full ${nodeClass} z-10 shrink-0 mt-1"></div>
                             </div>
 
                             <!-- Right Event Card (Color Coded Matching Reference) -->
-                            <div class="flex-1 ${cardClass} rounded-[22px] p-3.5 hover:shadow-md transition-all space-y-2">
+                            <div class="flex-1 min-w-0 ${cardClass} rounded-[20px] p-3 hover:shadow-md transition-all space-y-1.5 overflow-hidden">
                                 <!-- Card Header: Badge & Duration/Status -->
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full inline-flex items-center space-x-1 ${badgeClass}">
-                                        ${e.badgeDot ? `<span class="text-xs leading-none mr-0.5">${e.badgeDot}</span>` : ''}
-                                        ${e.badgeIcon ? `<span class="mr-0.5">${e.badgeIcon}</span>` : ''}
-                                        <span>${badgeText}</span>
+                                <div class="flex items-center justify-between gap-1.5 min-w-0">
+                                    <span class="text-[9.5px] font-bold px-2 py-0.5 rounded-full inline-flex items-center space-x-1 shrink min-w-0 truncate ${badgeClass}">
+                                        ${e.badgeDot ? `<span class="text-xs leading-none mr-0.5 shrink-0">${e.badgeDot}</span>` : ''}
+                                        ${e.badgeIcon ? `<span class="mr-0.5 shrink-0">${e.badgeIcon}</span>` : ''}
+                                        <span class="truncate">${badgeText}</span>
                                     </span>
-                                    <span class="text-[11px] ${metaClass}">${durationText}</span>
+                                    <span class="text-[10px] ${metaClass} shrink-0 whitespace-nowrap">${durationText}</span>
                                 </div>
 
                                 <!-- Card Title -->
-                                <div class="flex items-center justify-between">
-                                    <h4 class="text-[14px] font-extrabold ${titleClass} tracking-tight flex items-center space-x-1.5">
-                                        <span>${icon}</span>
-                                        <span>${e.title}</span>
+                                <div class="flex items-center justify-between gap-1 min-w-0">
+                                    <h4 class="text-[13px] font-extrabold ${titleClass} tracking-tight flex items-center space-x-1 min-w-0 truncate">
+                                        <span class="shrink-0">${icon}</span>
+                                        <span class="truncate">${e.title}</span>
                                     </h4>
-                                    ${e.rightEmoji ? `<span class="text-base">${e.rightEmoji}</span>` : ''}
+                                    ${e.rightEmoji ? `<span class="text-sm shrink-0">${e.rightEmoji}</span>` : ''}
                                 </div>
 
                                 <!-- Card Location / Details -->
-                                ${e.locationHtml ? `<p class="text-[11px] font-medium leading-snug">${e.locationHtml}</p>` : (e.location ? `<p class="text-[11px] font-medium ${e.locationClass || 'text-neutral-500'} leading-snug">${e.location}</p>` : '')}
+                                ${e.locationHtml ? `<p class="text-[10.5px] font-medium leading-snug line-clamp-2">${e.locationHtml}</p>` : (e.location ? `<p class="text-[10.5px] font-medium ${e.locationClass || 'text-neutral-500'} leading-snug line-clamp-2">${e.location}</p>` : '')}
 
                                 <!-- Recovery Progress Bar -->
                                 ${e.isProgress ? `
-                                    <div class="pt-1 flex items-center justify-between gap-2.5">
+                                    <div class="pt-0.5 flex items-center justify-between gap-2 min-w-0">
                                         <div class="flex-1 ${e.progressTrackClass || 'bg-white/80'} h-1.5 rounded-full overflow-hidden">
                                             <div class="${e.progressBarClass || 'bg-[#059669]'} h-full rounded-full" style="width: ${e.progressPercent || 65}%"></div>
                                         </div>
-                                        <span class="text-[10px] ${e.progressLabelClass || 'text-[#059669] font-bold'} tracking-tight shrink-0">${e.progressLabel || 'Restoring'}</span>
+                                        <span class="text-[9.5px] ${e.progressLabelClass || 'text-[#059669] font-bold'} tracking-tight shrink-0">${e.progressLabel || 'Restoring'}</span>
                                     </div>
                                 ` : ''}
 
                                 <!-- Smart Slotted Focus Sprint Capsule -->
                                 ${e.sprint ? `
-                                    <div class="mt-1 flex items-center justify-between ${e.sprintClass || 'bg-[#FAF5FF] border border-[#E9D5FF] text-[#6B21A8]'} rounded-full px-2.5 py-1 text-[10.5px] font-semibold">
-                                        <div class="flex items-center space-x-1.5">
-                                            <span class="w-1.5 h-1.5 rounded-full ${e.sprintDotClass || 'bg-[#7E22CE]'}"></span>
-                                            <span>${e.sprint}</span>
+                                    <div class="mt-0.5 flex items-center justify-between ${e.sprintClass || 'bg-[#FAF5FF] border border-[#E9D5FF] text-[#6B21A8]'} rounded-full px-2.5 py-0.5 text-[9.5px] font-semibold min-w-0">
+                                        <div class="flex items-center space-x-1.5 min-w-0 truncate">
+                                            <span class="w-1.5 h-1.5 rounded-full ${e.sprintDotClass || 'bg-[#7E22CE]'} shrink-0"></span>
+                                            <span class="truncate">${e.sprint}</span>
                                         </div>
-                                        <span class="material-symbols-outlined text-[14px] text-purple-400">more_horiz</span>
+                                        <span class="material-symbols-outlined text-[13px] text-purple-400 shrink-0">more_horiz</span>
                                     </div>
                                 ` : ''}
+
+                                <!-- Post-Event Reflection Section -->
+                                <div class="pt-1.5 border-t border-black/5 flex items-center justify-between text-[10px] gap-1.5 min-w-0">
+                                    <div class="flex items-center space-x-1 min-w-0 flex-1">
+                                        <span class="text-xs shrink-0">💭</span>
+                                        <p class="italic text-neutral-600 truncate text-[10px] min-w-0">${e.reflection ? e.reflection : '<span class="text-neutral-400 not-italic font-normal">Add reflection</span>'}</p>
+                                    </div>
+                                    <button type="button" onclick="event.stopPropagation(); openReflectionForCalendarEvent('${(e.title || '').replace(/'/g, "\\'")}', '${e.date}', '${e.time}')" class="text-[9.5px] font-bold px-2 py-0.5 rounded-full bg-black/5 hover:bg-black/10 text-neutral-700 transition active:scale-95 shrink-0 cursor-pointer whitespace-nowrap">
+                                        ${e.reflection ? 'Edit' : '+ Note'}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -1740,6 +2080,7 @@
         const eventTitleInput = document.getElementById('eventTitleInput');
         const eventDateSelect = document.getElementById('eventDateSelect');
         const eventTimeSelect = document.getElementById('eventTimeSelect');
+        const eventEndTimeSelect = document.getElementById('eventEndTimeSelect');
         const eventLocationInput = document.getElementById('eventLocationInput');
         const selectedEventTypeInput = document.getElementById('selectedEventType');
 
@@ -1793,9 +2134,33 @@
             e.preventDefault();
             const title = eventTitleInput.value.trim() || 'Daily Focus Task';
             const date = eventDateSelect.value;
-            const time = eventTimeSelect.value;
+            const rawTime = eventTimeSelect.value;
+            const time = rawTime.replace(/\s*\(.*?\)/, '').trim();
+            const rawEndTime = eventEndTimeSelect ? eventEndTimeSelect.value : '';
+            const endTime = rawEndTime.replace(/\s*\(.*?\)/, '').trim();
             const location = eventLocationInput.value.trim() || 'Library Quiet Zone';
             const type = selectedEventTypeInput.value || 'focus';
+
+            // Calculate duration
+            let calcDuration = '60m';
+            if (time && endTime) {
+                try {
+                    const parseMinutes = (tStr) => {
+                        const parts = tStr.split(':');
+                        let h = parseInt(parts[0]);
+                        let m = parseInt(parts[1]) || 0;
+                        if (tStr.includes('PM') && h !== 12) h += 12;
+                        if (tStr.includes('AM') && h === 12) h = 0;
+                        return h * 60 + m;
+                    };
+                    const startM = parseMinutes(time);
+                    const endM = parseMinutes(endTime);
+                    const diffM = endM - startM;
+                    if (diffM > 0) {
+                        calcDuration = diffM >= 60 && diffM % 60 === 0 ? `${diffM / 60}h` : `${diffM}m`;
+                    }
+                } catch (err) {}
+            }
 
             // Add to calendar events with rich color themes matching reference
             const colorMapping = {
@@ -1863,7 +2228,8 @@
                 progressTrackClass: config.progressTrackClass,
                 progressLabelClass: config.progressLabelClass,
                 progressLabel: config.progressLabel,
-                durationText: '60m'
+                durationText: calcDuration,
+                endTime: endTime
             };
             calEvents.push(newEvent);
 
@@ -1887,20 +2253,29 @@
                     const styling = iconColorMap[type] || iconColorMap.focus;
                     
                     const itemHtml = `
-                        <article class="bg-white rounded-[24px] p-3.5 flex items-center justify-between shadow-soft border border-black/[0.02] transform transition-all duration-300 group cursor-pointer" onclick="toggleTaskComplete(this)">
-                            <div class="flex items-center space-x-3">
-                                <div class="task-check-circle w-6 h-6 rounded-full border-2 border-neutral-300 group-hover:border-blue-500 flex items-center justify-center shrink-0 transition-colors">
-                                    <span class="material-symbols-outlined text-[14px] text-white opacity-0 transition-opacity">check</span>
+                        <article class="bg-white rounded-[24px] p-3.5 flex flex-col shadow-soft border border-black/[0.02] transform transition-all duration-300 group cursor-pointer" onclick="toggleTaskComplete(this)">
+                            <div class="flex items-center justify-between w-full">
+                                <div class="flex items-center space-x-3">
+                                    <div class="task-check-circle w-6 h-6 rounded-full border-2 border-neutral-300 group-hover:border-blue-500 flex items-center justify-center shrink-0 transition-colors">
+                                        <span class="material-symbols-outlined text-[14px] text-white opacity-0 transition-opacity">check</span>
+                                    </div>
+                                    <div class="w-10 h-10 rounded-2xl ${styling.bg} flex items-center justify-center shrink-0 text-[18px]">
+                                        ${styling.icon}
+                                    </div>
+                                    <div>
+                                        <h3 class="task-title text-[14px] font-bold text-[#1C1C1E] tracking-tight leading-tight transition-all">${title}</h3>
+                                        <p class="text-[11px] font-medium text-[#8E8E93] mt-0.5">${location}</p>
+                                    </div>
                                 </div>
-                                <div class="w-10 h-10 rounded-2xl ${styling.bg} flex items-center justify-center shrink-0 text-[18px]">
-                                    ${styling.icon}
-                                </div>
-                                <div>
-                                    <h3 class="task-title text-[14px] font-bold text-[#1C1C1E] tracking-tight leading-tight transition-all">${title}</h3>
-                                    <p class="text-[11px] font-medium text-[#8E8E93] mt-0.5">${location}</p>
-                                </div>
+                                <span class="bg-[#1C1C1E] text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full tracking-tight">${time}</span>
                             </div>
-                            <span class="bg-[#1C1C1E] text-white text-[11px] font-bold px-3.5 py-1.5 rounded-full tracking-tight">${time}</span>
+                            <div class="task-reflection-container mt-2.5 pt-2 border-t border-neutral-100/90 flex items-start justify-between space-x-2 text-[11px] hidden">
+                                <div class="flex items-start space-x-1.5 flex-1 min-w-0">
+                                    <span class="text-xs shrink-0">💭</span>
+                                    <p class="task-reflection-text italic text-neutral-600 truncate text-[11px]"></p>
+                                </div>
+                                <button type="button" onclick="event.stopPropagation(); openReflectionForElement(this.closest('article'))" class="text-[10px] font-bold text-blue-600 hover:text-blue-700 hover:underline shrink-0">Edit</button>
+                            </div>
                         </article>
                     `;
                     scheduleList.insertAdjacentHTML('afterbegin', itemHtml);
@@ -1922,6 +2297,185 @@
 
             // Show Toast
             showAppToast(`✓ Task added: "${title}"`);
+        }
+
+        // ============================================================
+        // Post-Event Reflection Modal Logic
+        // ============================================================
+        const reflectionModal = document.getElementById('reflectionModal');
+        const reflectionSheet = document.getElementById('reflectionSheet');
+        const reflectionTextarea = document.getElementById('reflectionTextarea');
+        const reflectionEventSubtitle = document.getElementById('reflectionEventSubtitle');
+        let activeReflectionContext = null;
+
+        function openReflectionModal() {
+            if (!reflectionModal || !reflectionSheet) return;
+            reflectionModal.classList.remove('pointer-events-none', 'opacity-0');
+            reflectionModal.classList.add('pointer-events-auto', 'opacity-100');
+            reflectionSheet.classList.remove('translate-y-full');
+            reflectionSheet.classList.add('translate-y-0');
+            if (reflectionTextarea) {
+                setTimeout(() => reflectionTextarea.focus(), 150);
+            }
+        }
+
+        function closeReflectionModal() {
+            if (!reflectionModal || !reflectionSheet) return;
+            reflectionSheet.classList.remove('translate-y-0');
+            reflectionSheet.classList.add('translate-y-full');
+            reflectionModal.classList.remove('opacity-100');
+            reflectionModal.classList.add('opacity-0');
+            setTimeout(() => {
+                reflectionModal.classList.remove('pointer-events-auto');
+                reflectionModal.classList.add('pointer-events-none');
+                activeReflectionContext = null;
+            }, 300);
+        }
+
+        function appendReflectionTag(tag) {
+            if (!reflectionTextarea) return;
+            if (reflectionTextarea.value.trim().length > 0) {
+                reflectionTextarea.value += ' ' + tag;
+            } else {
+                reflectionTextarea.value = tag + ' - ';
+            }
+            reflectionTextarea.focus();
+        }
+
+        function openReflectionForElement(el) {
+            if (!el) return;
+            const titleEl = el.querySelector('.task-title');
+            const taskTitle = titleEl ? titleEl.textContent.trim() : 'Event';
+            if (reflectionEventSubtitle) reflectionEventSubtitle.textContent = `Completed: ${taskTitle}`;
+            
+            const existingText = el.dataset.reflection || '';
+            if (reflectionTextarea) reflectionTextarea.value = existingText;
+            
+            activeReflectionContext = { type: 'element', el: el };
+            openReflectionModal();
+        }
+
+        function openReflectionForCalendarEvent(title, date, time) {
+            if (reflectionEventSubtitle) reflectionEventSubtitle.textContent = `${title} (${time})`;
+            
+            const ev = calEvents.find(e => e.title === title && e.date === date);
+            const existingText = ev && ev.reflection ? ev.reflection : '';
+            if (reflectionTextarea) reflectionTextarea.value = existingText;
+            
+            activeReflectionContext = { type: 'calendar', title, date, time };
+            openReflectionModal();
+        }
+
+        function handleSaveReflection(e) {
+            if (e) e.preventDefault();
+            const text = reflectionTextarea ? reflectionTextarea.value.trim() : '';
+
+            if (activeReflectionContext) {
+                if (activeReflectionContext.type === 'element' && activeReflectionContext.el) {
+                    const el = activeReflectionContext.el;
+                    el.dataset.reflection = text;
+                    const container = el.querySelector('.task-reflection-container');
+                    const textP = el.querySelector('.task-reflection-text');
+                    if (container && textP) {
+                        if (text) {
+                            textP.textContent = `"${text}"`;
+                            container.classList.remove('hidden');
+                        } else {
+                            container.classList.add('hidden');
+                        }
+                    }
+                } else if (activeReflectionContext.type === 'calendar') {
+                    const { title, date } = activeReflectionContext;
+                    const ev = calEvents.find(item => item.title === title && item.date === date);
+                    if (ev) {
+                        ev.reflection = text;
+                        if (calView === 'day') renderCalDay(calYear, calMonth, calDate);
+                    }
+                }
+            }
+
+            showAppToast('Reflection saved ✨');
+            closeReflectionModal();
+        }
+
+        // ============================================================
+        // Capacity Check-In Modal / Calibration Logic
+        // ============================================================
+        const capacityCheckinModal = document.getElementById('capacityCheckinModal');
+
+        function openCapacityCheckinModal() {
+            if (!capacityCheckinModal) return;
+            capacityCheckinModal.classList.remove('pointer-events-none', 'opacity-0', 'translate-y-full');
+            capacityCheckinModal.classList.add('pointer-events-auto', 'opacity-100', 'translate-y-0');
+        }
+
+        function closeCapacityCheckinModal() {
+            if (!capacityCheckinModal) return;
+            capacityCheckinModal.classList.remove('pointer-events-auto', 'opacity-100', 'translate-y-0');
+            capacityCheckinModal.classList.add('pointer-events-none', 'opacity-0', 'translate-y-full');
+        }
+
+        function updateCheckinSlider(type, val) {
+            const numVal = parseFloat(val).toFixed(1);
+            if (type === 'mental') {
+                const badge = document.getElementById('mental-val-badge');
+                if (badge) {
+                    const status = val >= 8.5 ? 'Peak' : (val >= 6.5 ? 'High' : (val >= 4 ? 'Baseline' : 'Foggy'));
+                    badge.innerHTML = `${numVal} <span class="text-[9px] font-medium text-indigo-500">/ 10 · ${status}</span>`;
+                }
+            } else if (type === 'physical') {
+                const badge = document.getElementById('physical-val-badge');
+                if (badge) {
+                    const status = val >= 8.5 ? 'Energized' : (val >= 6.5 ? 'Steady' : (val >= 4 ? 'Moderate' : 'Drained'));
+                    badge.innerHTML = `${numVal} <span class="text-[9px] font-medium text-emerald-500">/ 10 · ${status}</span>`;
+                }
+            } else if (type === 'social') {
+                const badge = document.getElementById('social-val-badge');
+                if (badge) {
+                    const status = val >= 8 ? 'Collaborative' : (val >= 5.5 ? 'Moderate' : (val >= 4 ? 'Reserved' : 'Solo only'));
+                    badge.innerHTML = `${numVal} <span class="text-[9px] font-medium text-amber-500">/ 10 · ${status}</span>`;
+                }
+            }
+        }
+
+        function toggleContextTag(btn) {
+            if (!btn) return;
+            const isActive = btn.classList.contains('bg-neutral-900');
+            if (isActive) {
+                btn.classList.remove('bg-neutral-900', 'text-white', 'border-neutral-900');
+                btn.classList.add('bg-white', 'text-neutral-800', 'border-neutral-200/70');
+            } else {
+                btn.classList.remove('bg-white', 'text-neutral-800', 'border-neutral-200/70');
+                btn.classList.add('bg-neutral-900', 'text-white', 'border-neutral-900');
+            }
+        }
+
+        function handleSaveCapacityCheckin() {
+            const mentalInput = document.getElementById('mental-slider');
+            const physicalInput = document.getElementById('physical-slider');
+            const socialInput = document.getElementById('social-slider');
+
+            const mVal = mentalInput ? parseFloat(mentalInput.value).toFixed(1) : '8.0';
+            const pVal = physicalInput ? parseFloat(physicalInput.value).toFixed(1) : '7.5';
+            const sVal = socialInput ? parseFloat(socialInput.value).toFixed(1) : '5.0';
+
+            // Update Today screen Energy Capacity numbers
+            const todayM = document.getElementById('todayMentalVal');
+            const todayP = document.getElementById('todayPhysicalVal');
+            const todayS = document.getElementById('todaySocialVal');
+            if (todayM) todayM.textContent = mVal;
+            if (todayP) todayP.textContent = pVal;
+            if (todayS) todayS.textContent = sVal;
+
+            const badgeM = document.getElementById('todayMentalBadge');
+            const badgeP = document.getElementById('todayPhysicalBadge');
+            const badgeS = document.getElementById('todaySocialBadge');
+            if (badgeM) badgeM.textContent = mVal >= 8 ? 'Peak' : 'Steady';
+            if (badgeP) badgeP.textContent = pVal >= 7 ? 'Steady' : 'Low';
+            if (badgeS) badgeS.textContent = sVal >= 6 ? 'Social' : 'Rest';
+
+            showAppToast('✓ Bio-rhythm calibrated! Schedule re-balanced ✨');
+            closeCapacityCheckinModal();
         }
 
         // Initialize Calendar & Event Listeners
